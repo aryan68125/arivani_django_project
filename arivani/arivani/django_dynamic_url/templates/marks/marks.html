@@ -1,0 +1,102 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock title %}
+{% block content %}
+<link href="{% static "css/marks/marks.css" %}" rel="stylesheet"/>
+<script>
+  var read_student_data_url = '{% url "read_student_data" %}';
+  var insert_marks_data_url = '{% url "insert_marks_data" %}';
+  var marks_settings_data_url = '{% url "marks_settings" %}';
+  var read_marks_data_url = '{% url "read_marks_data" %}';
+  var recalculate_pass_fail_data_url = '{% url "recalculate_pass_fail" %}';
+  var update_marks_data_url = '{% url "update_marks_data" %}';
+  var delete_marks_data_url = '{% url "delete_marks_data" %}';
+</script>
+<div class="container">
+    <div class="row">
+        <h1>This is a {{title}} page</h1>
+    </div> 
+    <div class="row">
+      <div class="button_container">
+        <button class="btn btn-primary mb-1 mx-1" id="marks_button">Marks Table</button>
+        <button class="btn btn-warning mb-1 mx-1" id="student_button">Student Table</button>
+        <button class="btn btn-dark mb-1 mx-1" id="marks_settings_button">Marks settings</button>
+      </div>              
+    </div>
+    
+    <!--Table to show marks settings form starts-->
+    <div class="row" id="marks_settings_form">
+    
+    </div>
+    <!--Table to show marks settings form ends-->
+
+    <!--Table to show student data starts-->
+    <div class="row" id="student_table_data">
+    
+    </div>
+    <!--Table to show student data ends-->
+
+    <!--marks table starts-->    
+    <div class="row" id="marks_table_container">
+    
+    </div>
+    <!--marks table ends-->
+
+    <!--Student form ends -->
+    <div class="container">
+        <div class="mb-2">
+            <div class="row">
+              <h3 id="student_name">Student's name</h3>
+              <p id="marks_ID_" style="display:none"></p>
+            </div>
+            <div class="row">
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="Maths" class="form-label">Maths</label>
+                  <input type="text" class="form-control form_inputs" id="Maths">
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="Physics" class="form-label">Physics</label>
+                  <input type="text" class="form-control form_inputs" id="Physics" >
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="Chemistry" class="form-label">Chemistry</label>
+                  <input type="text" class="form-control form_inputs" id="Chemistry">
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="Computer" class="form-label">Computer</label>
+                  <input type="text" class="form-control form_inputs" id="Computer">
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="English" class="form-label">English</label>
+                  <input type="text" class="form-control form_inputs" id="English">
+                </div>
+              </div>
+              <div class="col-lg-4 col-md-6 col-sm-12">
+                <div class="mb-3">
+                  <label for="Hindi" class="form-label">Hindi</label>
+                  <input type="text" class="form-control form_inputs" id="Hindi">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+                  <div class="button_container">
+                    <button class="btn btn-success mb-1 mx-1" id="submit_button">Submit</button>
+                    <button class="btn btn-danger mb-1 mx-1" id="cancel_button">Cancel</button>
+                  </div>              
+            </div>
+          </div>
+          <!--Student form ends -->
+</div>
+<script src="{% static 'js/marks/marks.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,11 @@
+h3{
+    color:blue;
+}
+.table_style {
+    height: 300px;
+    overflow-y: scroll;
+  }
+  .student_table_style{
+    height: 300px;
+    overflow-y: scroll;
+  }

@@ -1,0 +1,37 @@
+{% extends "base/base_auth.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <script>
+        var register = '{% url "register" %}';
+        var registerOtpPage = '{% url "registerOtpPage" %}';
+    </script>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Username</label>
+            <input type="text" class="form-control" id="userName" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Email address</label>
+          <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp">
+          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+        </div>
+        <div class="mb-3">
+            <select class="form-control" id="role">
+                <option value="Select">--Select--</option>
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+            </select>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input type="password" class="form-control" id="userPass1">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword2" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="userPass2">
+            <a href="loginPage">Already have an account?</a>
+          </div>
+        <button class="btn btn-primary" id="register">Register</button>   
+      <script src="{% static 'js/auth_user/register.js' %}"></script>
+</div>
+{% endblock content %}

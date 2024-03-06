@@ -1,0 +1,46 @@
+{% extends 'base/base_auth.html' %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock %}
+{% block content %}
+<script>
+    var loginUser = "{% url 'loginUser' %}"
+    var dashboard_home="{% url 'dashboard_home' %}"
+</script>
+<div class="container mt-5">
+    <div class="mx-auto mt-5" style="width:60%;">
+        <div class="card">
+            <div class="card-body">
+              <h3 class="text-center">Login user</h3>
+              <div class="row mb-3">
+                <label for="username" class="col-sm-2 col-form-label">username</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="username">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <label for="password1" class="col-sm-2 col-form-label">password</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="password1">
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <a href="{% url 'registerUserPage' %}" class="font-weight:bolder;" style="text-decoration:none;">Don't have an account?</a>
+              </div>
+              
+              <div class="row mb-3">
+                <a href="{% url 'forgotPasswordPageUsername' %}" class="font-weight:bolder;" style="text-decoration:none;">forgot Password?</a>
+              </div>
+
+              <div class="row mb-3">
+                <button class="btn btn-dark ms-2" id="signin" style="width:20%;">Sign in</button>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+<script src="{% static 'js/auth_user/loginUser.js' %}"></script>
+{% endblock %}

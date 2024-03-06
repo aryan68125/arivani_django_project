@@ -1,0 +1,187 @@
+{
+  "info": {
+    "name": "Djano REST api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Verify otp Register",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/VerifyEmail/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"otp\":\"4130\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "change user pass",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NzkzNzM1LCJpYXQiOjE3MDg3ODY1MzUsImp0aSI6Ijc5OTI1MDNlM2VhZjRkMWM5NWI4NTZjNzU3M2UyZDA2IiwidXNlcl9pZCI6MjB9.219OKpuRgkT1lsDVKAiEdKW3RpbN9cYwnXBF7nG8xPs",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/UserChangePasswordView/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\"password\":\"268859\",\n\"password2\":\"268859\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get user profile",
+      "event": [],
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NzkzNzM1LCJpYXQiOjE3MDg3ODY1MzUsImp0aSI6Ijc5OTI1MDNlM2VhZjRkMWM5NWI4NTZjNzU3M2UyZDA2IiwidXNlcl9pZCI6MjB9.219OKpuRgkT1lsDVKAiEdKW3RpbN9cYwnXBF7nG8xPs",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/USerProfileView/"
+      }
+    },
+    {
+      "name": "login user",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/UserLoginView/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\":\"aryan268859@gmail.com\",\n  \"password\":\"ilovetoneystark\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "register User",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\":\"aryan268859@gmail.com\",\n  \"name\":\"aastha\",\n  \"password\":\"ilovetoneystark\",\n  \"password2\":\"ilovetoneystark\",\n  \"tc\":\"True\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "reset-user-password",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/reset_password/MjA/c2xt85-d97414e0a943583412ab61d190745e50/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"password\":\"iloveironman\",\n  \"password2\":\"iloveironman\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "sendResetPassLink",
+      "event": [],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "disabled": false,
+            "type": "default"
+          }
+        ],
+        "url": "http://127.0.0.1:8000/SendPasswordResetEmailView/",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\":\"aryan268859@gmail.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "variable": []
+}

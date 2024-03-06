@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock title %}
+{% block content %}
+<link href="{% static 'css/attendance/attendance.css' %}" rel="stylesheet"/>
+<script>
+    var get_student_data_url = '{% url "get_student_data" %}'
+    var insert_attendance_data_url = '{% url "insert_attendance" %}'
+    var read_attendance_data_url = '{% url "Read_attendance" %}'
+    var update_attendance_data_url = '{% url "update_attendance" %}'
+    var delete_attendance_data_url = '{% url "delete_attendance" %}'
+</script>
+<div class="container">
+    <h1>This is an {{title}} page</h1>
+    <div class="row">
+        <h3 id="student_name"></h3>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            <div class="input-group date" data-mdb-inline="true">
+                <input id="date_picker" type="date" class="form-control"/>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="present" placeholder="No of days Present">
+                <label for="present">No of days present</label>
+              </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <button class="btn btn-success" id="submit">Submit</button>
+            <button class="btn btn-danger" id="cancel">Cancel</button>
+            <button class="btn btn-dark" id="select_student">Select Student</button>
+            <button class="btn btn-secondary" id="show_attendance">Show attendance</button>
+        </div>
+    </div>
+    <div class="row">
+        <div id="student_table_data"></div>
+        <div id="attendance_table_data"></div>
+    </div>
+</div>
+<script src="{% static "js/attendance/attendance.js" %}"></script>
+{% endblock content %}

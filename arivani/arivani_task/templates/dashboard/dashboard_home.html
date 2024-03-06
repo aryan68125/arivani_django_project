@@ -1,0 +1,64 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<div class="container">
+    <script>
+        var insert_data_url = '{% url "insert_data" %}'
+        var get_all_data_url = '{% url "get_all_data" %}'
+        var update_data_url = '{% url "update_data" %}'
+    </script>
+    <h3>Welcome {{user.username}}</h3>
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Add Hr
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="hrID">Hr ID</label>
+                                <input type="text" class="form-control" id="hrID" placeholder="HrID">
+                                <p class ="text-danger" id="hrID_error" style="display:none">hrID field can't be empty</p>
+                                <p class ="text-danger" id="hrID_number_error" style="display:none">hrID should be a number</p>
+                                <p class ="text-danger" id="hrID_positive_number_error" style="display:none">hrID should be a positive number</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="name">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name of Hr">
+                                <p class ="text-danger" id="name_error" style="display:none">name field can't be empty</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%">Save</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="table-responsive responsive_table_style"></div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">record_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Hr ID</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+            </tbody>
+          </table>
+    </div>
+</div>
+<script src="{% static 'js/dashboard/dashboard.js' %}"></script>
+{% endblock content %}

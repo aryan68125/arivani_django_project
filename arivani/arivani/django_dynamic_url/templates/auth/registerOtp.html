@@ -1,0 +1,17 @@
+{% extends "base/base_auth.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <script>
+        var registerOtp='{% url "registerOtp" %}';
+        var loginPage='{% url "loginPage" %}';
+    </script>
+    {% comment %} <p style="display:block">{{data.otp}}</p> {% endcomment %}
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Verify OTP</label>
+            <input type="text" class="form-control" id="otp" aria-describedby="emailHelp">
+        </div>
+        <button class="btn btn-primary" id="submit">Verify</button>   
+      <script src="{% static 'js/auth_user/registerOtp.js' %}"></script>
+</div>
+{% endblock content %}

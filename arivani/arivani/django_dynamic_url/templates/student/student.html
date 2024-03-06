@@ -1,0 +1,111 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}
+{{title}}
+{% endblock title %}
+{% block content %}
+<link href="{% static 'css/student/student.css' %}" rel="stylesheet"/>
+<script>
+  var insert_data_url = "{% url "insert_student_data" %}";
+  var read_data_url = "{% url "read_student_data" %}";
+  var update_data_url = "{% url "update_student_data" %}";
+  var delete_data_url = "{% url "delete_student_data" %}";
+  var student_detail_data_url = "{% url "open_student_detail_page" %}";
+  {% comment %} var student_details_url = "{% url "student_details" %}"; {% endcomment %}
+</script>
+<div class="container">
+    <div class="row">
+        <h3>This is a {{title}} page <i class="fa-solid fa-user"></i></h3>
+    </div>
+    <!--Student form starts -->
+    <div class="mb-2">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="mb-3">
+              <label for="Student_Name" class="form-label">Name</label>
+              <input type="text" class="form-control form_inputs" id="Student_Name">
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="mb-3">
+              <label for="roll_no" class="form-label">Roll No</label>
+              <input type="text" class="form-control form_inputs" id="roll_no" >
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="mb-3">
+              <label for="mobile" class="form-label">Mobile</label>
+              <input type="text" class="form-control form_inputs" id="mobile">
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="mb-3">
+              <label for="Father_Name" class="form-label">Father's name</label>
+              <input type="text" class="form-control form_inputs" id="Father_Name">
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="text" class="form-control form_inputs" id="email">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-3"></div>
+          <div class="col-1"></div>
+          <div class="col-2">
+            <div class="row">
+              <div class="col-sm-12 col-md-12 col-lg-6">
+                <button class="btn btn-success mb-1" id="submit_button">Submit</button>
+              </div>
+              <div class="col-sm-12 col-md-12 col-lg-6">
+                <button class="btn btn-danger mb-1" id="cancel_button">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Student form ends -->
+      
+<!--Table to show data starts-->
+<div class="row">
+  <div class="table-responsive table_style">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Sr no</th>
+          <th scope="row" style="display:none;">student_ID</th>
+          <th>Student's Name</th>
+          <th>Roll No</th>
+          <th>Mobile</th>
+          <th>Father's Name</th>
+          <th>email</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="student_info_table">
+        <tr>
+          <td>0</td>
+          <td scope="row" style="display:none;">NAN</td>
+          <td>NAN</td>
+          <td>NAN</td>
+          <td>NAN</td>
+          <td>NAN</td>
+          <td>NAN</td>
+          <td>NAN</td>
+          <td>
+            <button class="btn btn-dark mb-1"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-danger mb-1"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!--Table to show data ends-->
+</div>
+<script src="{% static 'js/student/student.js' %}"></script>
+{% endblock content %}
