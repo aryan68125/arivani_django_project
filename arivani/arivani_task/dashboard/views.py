@@ -21,15 +21,19 @@ def insert_data(request):
                 if hrID and name:
                     if hrID.isdigit():
                         if int(hrID)>0:
-                            try:
-                                Hr_model.objects.create(
-                                    HrID = hrID,
-                                    name = name
-                                )
-                                xyz = "jksaasjda"
-                                return JsonResponse({'status': 200,'context':xyz}, status=200)
-                            except:
-                                return JsonResponse({'status': 500,'error':"data can't be inserted"}, status=500)
+                            db_instance = Hr_model.objects.filter(HrID=hrID, name=name)
+                            if db_instance:
+                                return JsonResponse({'status':500,'error':'Record Duplication not allowed'},status=500)
+                            else:
+                                try:
+                                    Hr_model.objects.create(
+                                        HrID = hrID,
+                                        name = name
+                                    )
+                                    return JsonResponse({'status': 201}, status=201)
+                                except:
+                                    return JsonResponse({'status': 500,'error':"data can't be inserted"}, status=500)
+
                         else:
                             return JsonResponse({'status':500,'error':'hrID must not be a negative number'},status=500)
                     else:
@@ -53,7 +57,7 @@ def update_data(request):
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         if request.method == 'PUT':
             try:
-                data = json.loads(request.body)
+                data = json.load(request)
                 f_data = data.get('payload')
                 id = f_data['id']
                 hrID = f_data['hrID']
@@ -82,3 +86,26 @@ def update_data(request):
                 return JsonResponse({'status': 400, 'error': 'Invalid JSON data'}, status=400)
         else:
             return JsonResponse({'status': 400, 'error': 'Bad Request'}, status=400)
+
+def delete_data(request):
+    is_ajax = request.headers.get("X-Requested-With")=="XMLHttpRequest"
+    if is_ajax:
+        if request.method=='POST':
+            try:
+                data = json.load(request)
+                f_data = data.get('payload')
+                id = f_data['id']
+                try:
+                    db_instance = Hr_model.objects.get(pk=id)
+                    db_instance.is_deleted = 1
+                    db_instance.save()
+                    return JsonResponse({'status':200},status=200)
+                except Hr_model.DoesNotExist:
+                    return JsonResponse({'status':404,'error':'Record not found'},status=404)
+            except:
+                return JsonResponse({'status':500,'error':'Json error'},status=500)
+        else:
+            return JsonResponse({'status':500,'error':'Bad Request'},status=400)
+    else:
+        return JsonResponse({'status':500,'error':'Not an Ajax request'},status=500)
+

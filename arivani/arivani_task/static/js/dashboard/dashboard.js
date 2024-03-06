@@ -118,7 +118,7 @@ function send_data(data){
         }
     ).then(response=>response.json())
     .then(data=>{
-        if (data.status==200){
+        if (data.status==201){
             get_data()
             reset_form()
             Swal.fire({
@@ -247,35 +247,49 @@ function delete_data(id){
     var data = {
         id:id
     }
-    fetch(
-        url,
-        {
-            credentials:'same-origin',
-        headers:{
-            'X-Requested-With':'XMLHttpRequest',
-            'X-CSRFToken':getCookie("csrftoken")
-        },
-        body:JSON.stringify({payload:data})
-        }
-    ).then(response=>response.json())
-    .then(data=>{
-        if(data.status=200){
-            Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Data Deleted!!",
-                showConfirmButton: false,
-                timer: 1500,
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(
+                delete_data_url,
+                {
+                method:'POST',
+                credentials:'same-origin',
+                headers:{
+                    'X-Requested-With':'XMLHttpRequest',
+                    'X-CSRFToken':getCookie("csrftoken")
+                },
+                body:JSON.stringify({payload:data})
+                }
+            ).then(response=>response.json())
+            .then(data=>{
+                if(data.status=200){
+                    get_data()
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Data Deleted!!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                }
+                else{
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                }
             })
         }
-        else{
-            Swal.fire({
-                position: "top-end",
-                icon: "error",
-                title: data.error,
-                showConfirmButton: false,
-                timer: 1500,
-            })
-        }
-    })
+      });
 }
