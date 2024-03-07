@@ -54,6 +54,7 @@ def get_all_data(request):
                 return JsonResponse({'status':500,'error':'Hr_model does not exist'},status=500)
 
 def update_data(request):
+    print("update_data")
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         if request.method == 'PUT':
             try:
@@ -62,7 +63,7 @@ def update_data(request):
                 id = f_data['id']
                 hrID = f_data['hrID']
                 name = f_data['name']
-                
+                print(f"{f_data}")
                 if hrID and name:
                     if hrID.isdigit():
                         if int(hrID) > 0:
@@ -71,7 +72,7 @@ def update_data(request):
                                 db_instance.HrID = hrID
                                 db_instance.name = name
                                 db_instance.save()
-                                return JsonResponse({'status': 200})
+                                return JsonResponse({'status': 200},status=200)
                             except Hr_model.DoesNotExist:
                                 return JsonResponse({'status': 404, 'error': 'Record does not exist'}, status=404)
                             except Exception as e:

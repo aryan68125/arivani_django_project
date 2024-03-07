@@ -41,10 +41,6 @@ $('body').on('click','#save_button',function(){
  validate(data)
 })
 function validate(data){
-    //testing
-    // send_data(data)
-
-
     if (data.hrID=="" && data.name==""){
             // Show the element
             $("#hrID_error").show();
@@ -208,18 +204,20 @@ function populate_form(id,HrID,name){
     )
 }
 function update_data(data){
+    
     fetch(
         update_data_url,{
             method:'PUT',
             credentials:'same-origin',
             headers:{
                 'X-Requested-With':'XMLHttpRequest',
-                'X-CSRFToken':getCookie("csrftoken")
+                'X-CSRFToken':getCookie("csrftoken"),
             },
             body:JSON.stringify({payload:data})
         }
     ).then(response=>response.json())
     .then(data=>{
+        console.log(data)
         if (data.status==200){
             get_data()
             reset_form()

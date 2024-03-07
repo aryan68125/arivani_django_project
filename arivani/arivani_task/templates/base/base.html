@@ -10,9 +10,10 @@
         <script src="{% static 'js/sweetalert/sweetalert.js' %}"></script>
         <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet"/>
         <link href="{% static 'css/fontawesome/all.css' %}" rel="stylesheet"/>
+        <link href="{% static 'css/base/base.css' %}" rel="stylesheet"/>
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        {% comment %} <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
               <a class="navbar-brand" href="#">Arivani Task (Aditya Kumar)</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,10 +22,10 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="{% url 'dashboard_home' %}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
+                    <a class="nav-link" href="{% url 'employeePage' %}">Employee</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'logoutUser' %}">Logout ({{user.username}})</a>
@@ -32,12 +33,36 @@
                 </ul>
               </div>
             </div>
-          </nav>
-        {% block content %}
-        {% endblock %}
+          </nav> {% endcomment %}
+
+          <div class="side-navbar active-nav d-flex justify-content-between flex-wrap flex-column" id="sidebar">
+            <ul class="nav flex-column text-white w-100">
+              <a href="#" class="nav-link h3 text-white my-2">
+                Side Nav
+              </a>
+              <li href="#" class="nav-link">
+                <span class="mx-2">Home</span>
+              </li>
+              <li href="#" class="nav-link">
+                <span class="mx-2">About</span>
+              </li>
+              <li href="#" class="nav-link">
+                <span class="mx-2">Contact</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="p-1 ps-4 my-container active-cont">
+            {% block content %}
+            {% endblock %}
+            <a class="btn border-0 ms-1" id="menu-btn">
+              <i class="fa-solid fa-bars"></i>
+            </a>
+          </div>
     </body>
-    <script src="js/bootstrap/bootstrap.js"></script>
-    <script src="js/fontawesome/all.js"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.js' %}"></script>
+    <script src="{% static 'js/fontawesome/all.js' %}"></script>
+    <script src="{% static 'js/base/base.js' %}"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>

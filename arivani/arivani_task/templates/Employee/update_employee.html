@@ -1,0 +1,87 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<div class="container">
+
+    <h3>Welcome {{user.username}}</h3>
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Update Employee
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <!--Using Django template to send data to the backend-->
+                    <form action = "{% url 'create_data' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            {% if error %}
+                            <p class="text-danger">{{error}}</p>
+                            {% endif %}
+                            {% if msg %}
+                            <p class="text-success">{{msg}}</p>
+                            {% endif %}
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="employeeID">Employee ID</label>
+                                    <input type="text" class="form-control" id="employeeID" name="employeeID" value="{{employee.employeeID}}">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{employee.name}}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="row mb-3">
+                                <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%" type="submit">Save Changes</button>
+                            </div>
+                        </div>
+                    </form>
+                    <!--Using Django template to send data to the backend-->
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="table-responsive responsive_table_style"></div>
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">record_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+                {% if employees %}
+                {% for item in employees %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <th scope="row" style="display:none">{{ item.id }}</th>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              ...
+                            </button>
+                            <ul class="dropdown-menu menu-dark">  
+                              <li><a class="dropdown-item text-center text-danger" href="#"><i class="fa-solid fa-trash"></i></a></li>
+                              <li><a class="dropdown-item text-center text-primary" href="{% url 'update_data_page' pk=item.id %}"><i class="fa-solid fa-pen"></i></a></li>
+                            </ul>
+                          </div>
+                    </td>
+                    <td>{{ item.employeeID }}</td>
+                    <td>{{ item.name }}</td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+          </table>
+    </div>
+</div>
+{% endblock content %}
