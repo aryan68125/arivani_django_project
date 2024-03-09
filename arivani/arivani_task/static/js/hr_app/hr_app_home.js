@@ -165,6 +165,7 @@ function get_data(){
             })
         }
     })
+    get_deleted_count_hr()
 }
 //create table 
 function create_table(data,i){
@@ -183,7 +184,7 @@ function create_table(data,i){
       )
 }
 function action(element_id,id,HrID,name){
-    console.log("action button clicked")
+    // console.log("action button clicked")
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <button class="btn btn-danger" onclick="delete_data('${id}')"><i class="fa-solid fa-trash"></i></button>
@@ -250,8 +251,8 @@ function delete_data(id){
         text: "You won't be able to revert this!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
@@ -270,6 +271,7 @@ function delete_data(id){
             .then(data=>{
                 if(data.status=200){
                     get_data()
+                    get_recyclebin_data()
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -291,3 +293,234 @@ function delete_data(id){
         }
       });
 }
+
+
+//Recycle bin functionality
+$('body').ready(function(){
+    get_deleted_count_hr()
+})
+function get_deleted_count_hr(){
+    fetch(
+        recycleBinData_hr_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken"),
+            }
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if(data.status == 200){
+            //show this data in the button
+            $('#recycle_bin_btn').empty()
+            $('#recycle_bin_btn').text(data.count)
+        }
+        else{
+            $('#recycle_bin_btn').empty()
+            $('#recycle_bin_btn').text("...") 
+            $('#recyclebin_data_card').hide()
+            // Swal.fire({
+            //     position: "top-end",
+            //     icon: "error",
+            //     title: data.error,
+            //     showConfirmButton: false,
+            //     timer: 1500,
+            // })
+        }
+    })
+}
+$('body').ready(function(){
+    $('#recyclebin_data_card').hide()
+})
+var toggle_recycle_card_flage = 0
+$('body').on('click','#recycle_bin_btn',function(){
+    var recycle_bin_btn_count = $('#recycle_bin_btn').text()
+    if (recycle_bin_btn_count>=1){
+        //if recycle bin has some data then show card on button click
+        if (toggle_recycle_card_flage == 0){
+            $('#recyclebin_data_card').show()
+            get_recyclebin_data()
+            toggle_recycle_card_flage=1
+        }
+        else{
+            $('#recyclebin_data_card').hide()
+            toggle_recycle_card_flage=0
+        }
+        //call the function to show a card that will contain a table to show deleted data
+    }
+    else{
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: 'recycle bin empty',
+            showConfirmButton: false,
+            timer: 1500,
+        })
+    }
+})
+function get_recyclebin_data(){
+  fetch(
+    recyclebin_Data_hr_url,
+    {
+        method:'POST',
+        credentials:'same-origin',
+        headers:{
+            'X-Requested-With':'XMLHttpRequest',
+            'X-CSRFToken':getCookie("csrftoken")
+        }
+    }
+  ).then(response=>response.json())
+  .then(data=>{
+    if(data.status==200){
+        // console.log(data)
+        //call create table function here
+        $('#recycle_bin_table_data').empty()
+        for(var i=0;i<data.data.length;i++){
+            // console.log(data.data[i])
+            create_recycil_bin_table(data.data[i],i)
+        }
+    }
+    else{
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: data.error,
+            showConfirmButton: false,
+            timer: 1500,
+        })
+    }
+  })  
+}
+function create_recycil_bin_table(data,i){
+    //    console.log(data)
+    //    console.log(i)
+          $('#recycle_bin_table_data').append(
+            `
+            <tr>
+                    <th scope="row">${i+1}</th>
+                    <th scope="row" style="display:none">${data.id}</th>
+                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${data.id}','${data.HrID}','${data.name}')" style="background:#c4c1e0">...</button></div></td>
+                    <td>${data.HrID}</td>
+                    <td>${data.name}</td>
+            </tr>
+            `
+          )
+    }
+function action_rb(element_id,id,HrID,name){
+    console.log("action button clicked")
+    $(`#${element_id}`).empty()
+    $(`#${element_id}`).append(`
+    <button class="btn btn-danger" onclick="delete_data_permanently_rb('${id}')"><i class="fa-solid fa-skull-crossbones"></i></button>
+    <button class="btn btn-primary" style="background:#8dc6ff" onclick="restore_data_rb('${id}')"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+    `)
+}
+
+function restore_data_rb(id){
+    // console.log("Data to be restored")
+    // console.log(id)
+    var data={
+        id:id
+    }
+    fetch(
+        restore_data_hr_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if (data.status==200){
+            get_data()
+            get_recyclebin_data()
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Data Restored!!",
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+        else{
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+    })
+}
+function delete_data_permanently_rb(id){
+    var data ={
+        id:id
+    }
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: "btn btn-danger",
+          cancelButton: "btn btn-primary"
+        },
+        buttonsStyling: false
+      });
+      swalWithBootstrapButtons.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(
+                delete_data_permanently_hr_url,
+                {
+                    method:'POST',
+                    credentials:'same-origin',
+                    headers:{
+                        'X-Requested-With':'XMLHttpRequest',
+                        'X-CSRFToken':getCookie("csrftoken")
+                    },
+                    body:JSON.stringify({payload:data})
+                }
+            ).then(response=>response.json())
+            .then(data=>{
+                if(data.status==200){
+                    get_deleted_count_hr()
+                    get_recyclebin_data()
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Data Deleted Permanently!!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                }
+                else{
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "error",
+                        title: data.error,
+                        showConfirmButton: false,
+                        timer: 1500,
+                    })
+                }
+            })
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Operation aborted :)",
+            icon: "error"
+          });
+        }
+      });
+}
+//Recycle bin functionality

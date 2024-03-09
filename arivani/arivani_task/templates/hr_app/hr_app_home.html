@@ -3,13 +3,82 @@
 {% block title %}{% endblock title %}
 {% block content %}
 <div class="container">
-    <script>
-        var insert_data_url = '{% url "insert_data" %}'
-        var get_all_data_url = '{% url "get_all_data" %}'
-        var update_data_url = '{% url "update_data_hr" %}'
-        var delete_data_url = '{% url "delete_data" %}'
-    </script>
-    <h3>Welcome {{user.username}}</h3>
+
+  <script>
+    var insert_data_url = '{% url "insert_data" %}'
+    var get_all_data_url = '{% url "get_all_data" %}'
+    var update_data_url = '{% url "update_data_hr" %}'
+    var delete_data_url = '{% url "delete_data" %}'
+    
+    var recycleBinData_hr_url = '{% url "recycleBinData_hr" %}'
+    var recyclebin_Data_hr_url = '{% url "recyclebin_Data_hr" %}'
+    var restore_data_hr_url = '{% url "restore_data_hr" %}'
+    var delete_data_permanently_hr_url = '{% url "delete_data_permanently_hr" %}'
+  </script>
+
+<h3>Hr Management</h3>
+
+<!--Recycle Page Employee Management-->
+<div class="card">
+  <div class="card-body" style="background:#CFE2FF;">
+    <div class="row">
+      <div class="col-sm-3 ">
+        <div class="row">
+          <div class="col-sm-2 ">
+            <span class="fs-3"  style="font-weight:bolder;"><i class="fa-solid fa-recycle"></i></span>
+          </div>
+          <div class="col-sm-10 ">
+            <h4>Recycle Bin</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 ">
+        
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-2">
+            {% comment %} <form action="{% url 'recycle_bin_hr' %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-secondary " style="background:#c4c1e0" type="submit" aria-expanded="false">
+                ...
+              </button>
+            </form> {% endcomment %}
+            <button id="recycle_bin_btn" class="btn btn-secondary " style="background:#c4c1e0" type="button" aria-expanded="false">
+              ...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="recyclebin_data_card">
+  <div class="card-body">
+    <div class="container">
+      <div class="table-responsive responsive_table_style"></div>
+          <table class="table" id="hr_table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col" style="display:none">record_id</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Hr ID</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody id="recycle_bin_table_data">
+              </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Recycle Page Employee Management-->
+
     <div class="row mt-5">
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -46,7 +115,7 @@
     </div>
     <div class="row mt-5">
         <div class="table-responsive responsive_table_style"></div>
-        <table class="table">
+        <table class="table" id="hr_table">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -61,5 +130,5 @@
           </table>
     </div>
 </div>
-<script src="{% static 'js/dashboard/dashboard.js' %}"></script>
+<script src="{% static 'js/hr_app/hr_app_home.js' %}"></script>
 {% endblock content %}

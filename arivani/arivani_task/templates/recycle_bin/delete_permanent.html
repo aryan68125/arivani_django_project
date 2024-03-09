@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<div class="container mb-2">
+    <div class="header_recyclebin">  
+        <a class="btn btn-dark" href="{% url 'recycleBinPage_emp' %}"><i class="fa-solid fa-arrow-left"></i></a>
+    </div>
+    <div class="row">
+        {% if error %}
+        <p class="text-danger fw-bolder">{{error}}</p>
+        {% endif %}
+    </div>
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Type 'DELETE' to record permanently
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <form action="{% url "deleteDataPermanently" %}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" id="employeeID" name="delete_text" placeholder="DELETE">
+                            <button class="btn btn-danger mt-2">DELETE</button>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

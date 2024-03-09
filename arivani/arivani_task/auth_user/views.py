@@ -79,7 +79,7 @@ def registerUser(request):
             else:
                 return JsonResponse({'status':400,'error':'bad request'},status=400)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 
 def registerVerifyOtpPage(request):
     if not request.user.is_authenticated:
@@ -89,7 +89,7 @@ def registerVerifyOtpPage(request):
         }
         return render(request,'auth_user/register_verify_otp.html',data)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 
 def resendOtp(request):
     if not request.user.is_authenticated:
@@ -104,7 +104,7 @@ def resendOtp(request):
             else:
                 return JsonResponse({'status':400,'error':'Bad Request'},status=400)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 def verifyOtpRegisterUser(request):
     if not request.user.is_authenticated:
         is_ajax = request.headers.get("X-Requested-With")=='XMLHttpRequest'
@@ -125,7 +125,7 @@ def verifyOtpRegisterUser(request):
             else:
                 return JsonResponse({'status':400,'error':'bad request'},status=400)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 
 def loginUserPage(request):
     if not request.user.is_authenticated:
@@ -135,7 +135,7 @@ def loginUserPage(request):
         }
         return render(request,'auth_user/loginUser.html',data)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 
 def loginUser(request):
     if not request.user.is_authenticated:
@@ -154,13 +154,13 @@ def loginUser(request):
                     return JsonResponse({'status':404,'error':'Bad User credentials'},status=404)
             else:
                 return JsonResponse({'status':400,'error':'Bad request'},status=400)
-    return redirect("dashboard_home")
+    return redirect("dashboardPage")
 
 def forgotPasswordPageUsername(request):
     if not request.user.is_authenticated:
         return render(request,"auth_user/forgotPasswordPage.html")
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 def sendVerificationUrl(request):
     if not request.user.is_authenticated:
         is_ajax = request.headers.get("X-Requested-With")=="XMLHttpRequest"
@@ -183,7 +183,7 @@ def sendVerificationUrl(request):
                 return JsonResponse({'status':400,'error':'Bad request'},status=400)
 
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 uid_save = {}
 token_save = {}
 def resetPassword(request,uid,token):
@@ -198,7 +198,7 @@ def resetPasswordPage(request):
     if not request.user.is_authenticated:
         return render(request,"auth_user/resetPasswordPage.html")
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 def resetPassword_pass(request):
     if not request.user.is_authenticated:
         is_ajax=request.headers.get("X-Requested-With")=='XMLHttpRequest'
@@ -221,7 +221,7 @@ def resetPassword_pass(request):
             else:
                 return JsonResponse({'status':400,'error':'badrequest'},status=400)
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 def logoutUser(request):
     if request.user.is_authenticated:
         logout_user(request)

@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/recycle_bin/recycle_bin.css' %}" rel="stylesheet"/>
+<div class="container">
+<div class="header_recyclebin">  
+    {% if title == 'emp' %}
+    <a class="btn btn-dark" href="{% url 'employeePage' %}"><i class="fa-solid fa-arrow-left"></i></a> <h3 class="ms-3">Recycle bin</h3>
+    {% elif title == 'hr' %}
+    <a class="btn btn-dark" href="{% url 'hr_home' %}"><i class="fa-solid fa-arrow-left"></i></a> <h3 class="ms-3">Recycle bin</h3>
+    {% endif %}
+</div>
+<div>
+    {% if error %}
+    <p class="text-danger">{{error}}</p>
+    {% endif %}
+    {% if msg %}
+    <p class="text-primary">{{msg}}</p>
+    {% endif %}
+</div>
+<div class="row">
+    {% if title == 'emp' %}
+    <div class="mt-5">
+        <div class="table-responsive responsive_table_style"></div>
+        {% if employees %}
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">record_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+                
+                {% for item in employees %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <th scope="row" style="display:none">{{ item.id }}</th>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              ...
+                            </button>
+                            <ul class="dropdown-menu menu-dark">  
+                              <li><a class="dropdown-item text-center text-primary" href="{% url 'restoreData_emp' pk=item.id %}"><i class="fa-solid fa-trash-can-arrow-up"></i> <span class="ms-2">Restore</span></a></li>
+                              <li><a class="dropdown-item text-center text-danger fw-bolder" href="{% url 'deleteDataPermanentlyPage_emp' pk=item.id %}"><i class="fa-solid fa-skull-crossbones"></i> <span class="ms-2">Delete</span></a></li>
+                            </ul>
+                          </div>
+                    </td>
+                    <td>{{ item.employeeID }}</td>
+                    <td>{{ item.name }}</td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+          </table>
+          {% else %}
+          <div class="card mb-2">
+            <div class="card-body">
+              <h3>No Data Found</h3>
+            </div>
+          </div>
+          {% endif %}
+    </div>
+    {% elif title == 'hr' %}
+    {% endif %}
+</div>
+</div>
+{% endblock content %}

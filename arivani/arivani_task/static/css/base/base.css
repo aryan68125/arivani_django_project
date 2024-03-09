@@ -26,3 +26,19 @@
     color: #fff;
     margin-left: -62px;
   }
+
+  .no_data{
+    height:1rem;
+    width:1rem;
+    border-style: solid;border-style: solid;
+  }
+
+  .table_style {
+    height: 300px;
+    overflow-y: scroll;
+   }
+   .student_table_style{
+    height: 300px;
+    overflow-y: scroll;
+   }
+   
