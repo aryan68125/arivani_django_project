@@ -3,7 +3,7 @@
 {% block title %}{% endblock title %}
 {% block content %}
 <div class="container">
-
+  <link href="{% static 'css/employee/employee.css' %}" rel="stylesheet"/>
   <h3>Employee Management</h3>
 
     <!--Recycle Page Employee Management-->
@@ -84,41 +84,42 @@
         </div>
     </div>
     <div class="row mt-5">
-        <div class="table-responsive responsive_table_style"></div>
+      {% if employees %}
+      <div class="table-responsive scrollable-table">
         <table class="table">
-            <thead>
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" style="display:none">record_id</th>
+              <th scope="col">Action</th>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody id="table_data">
+              {% for item in employees %}
               <tr>
-                <th scope="col">#</th>
-                <th scope="col" style="display:none">record_id</th>
-                <th scope="col">Action</th>
-                <th scope="col">Employee ID</th>
-                <th scope="col">Name</th>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <th scope="row" style="display:none">{{ item.id }}</th>
+                  <td>
+                      <div class="dropdown">
+                          <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ...
+                          </button>
+                          <ul class="dropdown-menu menu-dark">  
+                            <li><a class="dropdown-item text-center text-danger" href="#"><i class="fa-solid fa-trash"></i></a></li>
+                            <li><a class="dropdown-item text-center text-primary" href="{% url 'update_data_page' pk=item.id %}"><i class="fa-solid fa-pen"></i></a></li>
+                          </ul>
+                        </div>
+                  </td>
+                  <td>{{ item.employeeID }}</td>
+                  <td>{{ item.name }}</td>
               </tr>
-            </thead>
-            <tbody id="table_data">
-                {% if employees %}
-                {% for item in employees %}
-                <tr>
-                    <th scope="row">{{forloop.counter}}</th>
-                    <th scope="row" style="display:none">{{ item.id }}</th>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                              ...
-                            </button>
-                            <ul class="dropdown-menu menu-dark">  
-                              <li><a class="dropdown-item text-center text-danger" href="#"><i class="fa-solid fa-trash"></i></a></li>
-                              <li><a class="dropdown-item text-center text-primary" href="{% url 'update_data_page' pk=item.id %}"><i class="fa-solid fa-pen"></i></a></li>
-                            </ul>
-                          </div>
-                    </td>
-                    <td>{{ item.employeeID }}</td>
-                    <td>{{ item.name }}</td>
-                </tr>
-                {% endfor %}
-                {% endif %}
+              {% endfor %}
             </tbody>
           </table>
+      </div>
+      {% endif %}
     </div>
 </div>
 {% endblock content %}

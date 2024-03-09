@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}{% endblock title %}
 {% block content %}
+<link href="{% static 'css/employee/employee.css' %}" rel="stylesheet"/>
 <div class="container">
   <h3>Employee Management</h3>
   <!--Recycle Page Employee Management-->
@@ -117,9 +118,9 @@
         </div>
     </div>
     <div class="row mt-5">
-        <div class="table-responsive responsive_table_style"></div>
         {% if employees %}
-        <table class="table">
+        <div class="table-responsive scrollable-table">
+          <table class="table">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -150,9 +151,9 @@
                     <td>{{ item.name }}</td>
                 </tr>
                 {% endfor %}
-                
             </tbody>
           </table>
+        </div>
           {% else %}
           <div class="card mb-2">
             <div class="card-body">

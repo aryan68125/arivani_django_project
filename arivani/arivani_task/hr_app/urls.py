@@ -10,5 +10,5 @@ urlpatterns=[
     path('recycleBinData/',recycleBinData,name='recycleBinData_hr'),
     path('recyclebin_Data/',recyclebin_Data,name="recyclebin_Data_hr"),
     path('restore_data_hr/',restore_data_hr,name="restore_data_hr"),
-    path('delete_data_permanently/',delete_data_permanently,name="delete_data_permanently_hr")
+    path('delete_data_permanently/',delete_data_permanently,name="delete_data_permanently_hr"),
 ]

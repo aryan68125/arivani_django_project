@@ -248,7 +248,7 @@ function delete_data(id){
     }
     Swal.fire({
         title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        text: "Move to recycle bin!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#d33",
