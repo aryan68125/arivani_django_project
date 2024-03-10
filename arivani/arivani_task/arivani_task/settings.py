@@ -132,10 +132,13 @@ STATIC_ROOT = BASE_DIR/'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
-#Email Settings
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+#email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = 2525
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
+
+PASSWORD_RESET_TIMEOUT = 900  # 900sec = 15 min

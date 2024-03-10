@@ -13,6 +13,10 @@ import random
 from django.utils.encoding import smart_str, force_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+#Email related import
+from django.conf import settings
+#email backend
+from django.core.mail import EmailMessage
 # Create your views here.
 
 def registerUserPage(request):
@@ -47,29 +51,29 @@ def registerUser(request):
                             user.is_active=False
                             user.save()
 
-                            # generate a random otp
+                            # save user email and username for later use
                             user_save.clear()
                             user_save['email'] = email
                             user_save['username'] = username
+                            # generate a random otp and save it for later use
                             otp_save.clear()
                             otp_save['otp'] = random.randint(1000,9999)
                             print(f"otp_save : {otp_save}")
-                            #send otp via email
-                            '''.... your code to send email here ....'''
+                            
+                            #send otp via email here
                             # Prepare email
-                            # email_addr = email
-                            # subject = f"{username} please verify your otp"
-                            # message = "Your otp"
-                            # recipient_list = [email_addr]
-                
-                
-                            # # Create EmailMessage object and attach the Excel file
-                            # email = EmailMessage(subject, message, 'rollex68125@gmail.com', recipient_list)
-                            # email.attach_file(excel_file_path)
-                
-                
-                            # # Send the email
-                            # email.send()
+                            otp = otp_save['otp']
+                            email_id = user_save['email']
+                            username = user_save['username']
+                            subject = f"{username} please verify your email"
+                            message = f"Verify this otp : {otp}"
+                            recipient_list = [email_id]
+
+                            # Create EmailMessage object and attach the Excel file
+                            email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+
+                            # Send the email
+                            email.send()
 
                             return JsonResponse({'status':200},status=200)
                     else:
@@ -99,7 +103,22 @@ def resendOtp(request):
                 otp_save.clear()
                 otp_save['otp'] = random.randint(1000,9999)
                 print(otp_save)
-                #send otp via email
+
+                #send otp via email here
+                # Prepare email
+                otp = otp_save['otp']
+                email_id = user_save['email']
+                username = user_save['username']
+                subject = f"{username} please verify your email"
+                message = f"Verify this otp : {otp}"
+                recipient_list = [email_id]
+
+                # Create EmailMessage object and attach the Excel file
+                email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+
+                # Send the email
+                email.send()
+                
                 return JsonResponse({'status':200},status=200)
             else:
                 return JsonResponse({'status':400,'error':'Bad Request'},status=400)
@@ -176,6 +195,22 @@ def sendVerificationUrl(request):
                     print(f"password reset token : {token}")
                     link = f'http://127.0.0.1:8000/reset_password/{uid}/{token}/'
                     print(f"generated link : {link}")
+
+                    #send otp via email here
+                    # Prepare email
+                    lint_to_send = link
+                    email_id = user.email
+                    username = user.username
+                    subject = f"{username} please reset your password"
+                    message = f"Reset PAssword by clicking this link : {lint_to_send}"
+                    recipient_list = [email_id]
+
+                    # Create EmailMessage object and attach the Excel file
+                    email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+
+                    # Send the email
+                    email.send()
+                    
                     return JsonResponse({'status':200},status=200)
                 except User.DoesNotExist:
                     return JsonResponse({'status':404,'error':'User not found'},status=404)
