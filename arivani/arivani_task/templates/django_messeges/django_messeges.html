@@ -1,0 +1,16 @@
+{% if messages %}
+<style>
+    li{
+        background:#FFB5DA;
+        color:#7D0A0A;
+        font-weight: bolder;
+        list-style-type: none;
+        padding-left:5%;
+    }
+</style>
+    <ul class="messages my-1">
+        {% for message in messages %}
+            <li class="{{ message.tags }} my-1">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

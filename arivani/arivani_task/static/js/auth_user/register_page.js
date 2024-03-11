@@ -26,16 +26,19 @@ $('body').on('click','#signup',function(){
     var email = $('#email').val()
     var password1 = $('#password1').val()
     var password2 = $('#password2').val()
-    var role = $('#role').val()
+    var first_name_= $('#f_name').val()
+    var last_name_ = $('#l_name').val()
     data = {
         username:username,
         email:email,
         password1:password1,
         password2:password2,
-        role:role
+        first_name:first_name_,
+        last_name:last_name_,
     }
+    // console.log(data)
     Validate_form(data)
-})
+});
 function Validate_form(data){
     if (data.username == "" || data.email == "" || data.password1=="" || data.password2==""){
         Swal.fire({

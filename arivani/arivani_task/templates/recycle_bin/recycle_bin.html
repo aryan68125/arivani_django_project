@@ -9,6 +9,8 @@
     <a class="btn btn-dark" href="{% url 'employeePage' %}"><i class="fa-solid fa-arrow-left"></i></a> <h3 class="ms-3">Recycle bin</h3>
     {% elif title == 'hr' %}
     <a class="btn btn-dark" href="{% url 'hr_home' %}"><i class="fa-solid fa-arrow-left"></i></a> <h3 class="ms-3">Recycle bin</h3>
+    {% elif title == 'manager' %}
+    <a class="btn btn-dark" href="{% url 'ManagerPage' %}"><i class="fa-solid fa-arrow-left"></i></a> <h3 class="ms-3">Recycle bin</h3>
     {% endif %}
 </div>
 <div>
@@ -67,6 +69,52 @@
           {% endif %}
     </div>
     {% elif title == 'hr' %}
+    {% elif title == 'manager' %}
+    <div class="mt-5">
+      <div class="table-responsive responsive_table_style"></div>
+      {% if managers %}
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" style="display:none">record_id</th>
+              <th scope="col">Action</th>
+              <th scope="col">Manager ID</th>
+              <th scope="col">Name</th>
+            </tr>
+          </thead>
+          <tbody id="table_data">
+              
+              {% for item in managers %}
+              <tr>
+                  <th scope="row">{{forloop.counter}}</th>
+                  <th scope="row" style="display:none">{{ item.id }}</th>
+                  <td>
+                      <div class="dropdown">
+                          <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            ...
+                          </button>
+                          <ul class="dropdown-menu menu-dark">  
+                            <li><a class="dropdown-item text-center text-primary" href="{% url 'restoreData_emp_manager' pk=item.id %}"><i class="fa-solid fa-trash-can-arrow-up"></i> <span class="ms-2">Restore</span></a></li>
+                            <li><a class="dropdown-item text-center text-danger fw-bolder" href="{% url 'deleteDataPermanentlyPage_manager' pk=item.id %}"><i class="fa-solid fa-skull-crossbones"></i> <span class="ms-2">Delete</span></a></li>
+                          </ul>
+                        </div>
+                  </td>
+                  <td>{{ item.managerID }}</td>
+                  <td>{{ item.name }}</td>
+              </tr>
+              {% endfor %}
+              
+          </tbody>
+        </table>
+        {% else %}
+        <div class="card mb-2">
+          <div class="card-body">
+            <h3>No Data Found</h3>
+          </div>
+        </div>
+        {% endif %}
+  </div>
     {% endif %}
 </div>
 </div>

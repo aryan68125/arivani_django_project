@@ -170,7 +170,11 @@ def deleteDataPermanentlyPage(request,pk):
             delete_data_perma.clear()
             delete_data_perma['id'] = pk
             print(f"permanent delete id : {delete_data_perma['id']}")
-            return render(request,'recycle_bin/delete_permanent.html')
+            title = "emp"
+            data = {
+                'title':title
+            }
+            return render(request,'recycle_bin/delete_permanent.html',data)
         else:
             return render(request,'recycle_bin/delete_permanent.html',{'error':'Bad Request'})
     else:

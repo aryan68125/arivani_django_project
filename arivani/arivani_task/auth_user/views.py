@@ -9,6 +9,10 @@ from django.contrib.auth import logout as logout_user
 from django.db import IntegrityError
 import json
 import random
+from django.urls import reverse
+
+#custom user password validation related import
+import re
 
 from django.utils.encoding import smart_str, force_bytes,DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
@@ -17,7 +21,27 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.conf import settings
 #email backend
 from django.core.mail import EmailMessage
-# Create your views here.
+
+#django messeges related imports
+from django.contrib import messages
+
+# Custom password validation for change password
+def is_valid_password(password):
+    # Check if password has minimum 6 characters
+    if len(password) < 6:
+        return False
+    
+    # Check if password contains at least one letter, one number, and one "@" character
+    if not re.search(r'[a-zA-Z]', password):
+        return False
+    if not re.search(r'\d', password):
+        return False
+    if not re.search(r'[@]', password):
+        return False
+    
+    # If all conditions are met, return True
+    return True
+# Custom password validation for change password
 
 def registerUserPage(request):
     if not request.user.is_authenticated:
@@ -27,7 +51,7 @@ def registerUserPage(request):
         }
         return render(request,'auth_user/register_page.html')
     else:
-        return redirect("dashboard_home")
+        return redirect("dashboardPage")
 otp_save = {}
 user_save = {}
 def registerUser(request):
@@ -38,46 +62,59 @@ def registerUser(request):
                 try:
                     data = json.load(request)
                     user_data = data.get('payload')
+                    print(user_data)
                     username = user_data['username']
                     email = user_data['email']
+                    first_name = user_data['first_name']
+                    last_name=user_data['last_name']
                     password1 = user_data['password1']
                     password2 = user_data['password2']
-                    if password1 == password2:
-                            user = User.objects.create(
-                                username = username,
-                                email = email,
-                            )
-                            user.set_password(password1)
-                            user.is_active=False
-                            user.save()
+                    try:
+                        is_email_taken = User.objects.get(email=email)
+                        taken_email = is_email_taken.email
+                        return JsonResponse({'status':500,'error':f'Email "{taken_email}" is already taken'},status=500)
+                    except User.DoesNotExist:
+                        if password1 == password2:
+                            if is_valid_password(password1):
+                                user = User.objects.create(
+                                    username = username,
+                                    email = email,
+                                    first_name=first_name,
+                                    last_name=last_name
+                                )
+                                user.set_password(password1)
+                                user.is_active=False
+                                user.save()
+    
+                                # save user email and username for later use
+                                user_save.clear()
+                                user_save['email'] = email
+                                user_save['username'] = username
+                                # generate a random otp and save it for later use
+                                otp_save.clear()
+                                otp_save['otp'] = random.randint(1000,9999)
+                                print(f"otp_save : {otp_save}")
+                                
+                                #send otp via email here
+                                # Prepare email
+                                otp = otp_save['otp']
+                                email_id = user_save['email']
+                                username = user_save['username']
+                                subject = f"{username} please verify your email"
+                                message = f"Verify this otp : {otp}"
+                                recipient_list = [email_id]
 
-                            # save user email and username for later use
-                            user_save.clear()
-                            user_save['email'] = email
-                            user_save['username'] = username
-                            # generate a random otp and save it for later use
-                            otp_save.clear()
-                            otp_save['otp'] = random.randint(1000,9999)
-                            print(f"otp_save : {otp_save}")
-                            
-                            #send otp via email here
-                            # Prepare email
-                            otp = otp_save['otp']
-                            email_id = user_save['email']
-                            username = user_save['username']
-                            subject = f"{username} please verify your email"
-                            message = f"Verify this otp : {otp}"
-                            recipient_list = [email_id]
+                                # Create EmailMessage object and attach the Excel file
+                                email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
 
-                            # Create EmailMessage object and attach the Excel file
-                            email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
-
-                            # Send the email
-                            email.send()
-
-                            return JsonResponse({'status':200},status=200)
-                    else:
-                        return JsonResponse({'status':500,'error':"Password don't match"})
+                                # Send the email
+                                email.send()
+    
+                                return JsonResponse({'status':200},status=200) 
+                            else:
+                                return JsonResponse({'status':500,'error':"Password must be a combination of letters, numbers and '@' also it should have characters greater than 5"})
+                        else:
+                            return JsonResponse({'status':500,'error':"Password don't match"})
                 except IntegrityError as e:
                     return JsonResponse({'status':500,'error':'username taken'},status=500)
             else:
@@ -229,6 +266,8 @@ def resetPassword(request,uid,token):
         token_save['token'] = token
         print(f"uid_saved : {uid_save['uid']}, token_saved : {token_save['token']}")
         return redirect("resetPasswordPage")
+    else:
+        return redirect("dashboardPage")
 def resetPasswordPage(request):
     if not request.user.is_authenticated:
         return render(request,"auth_user/resetPasswordPage.html")
@@ -263,3 +302,54 @@ def logoutUser(request):
         return redirect("loginUserPage")
     else:
         return redirect("loginUserPage")
+
+
+# This function should be accesible after the user is logged in starts
+def ChangePasswordPage(request):
+    if request.user.is_authenticated:
+        return render(request,'auth_user/changeUserPass.html')
+    else:
+        return redirect("loginUserPage")
+
+def ChangePassword(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            username = request.user.username
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            print(f"password1 : {password1} , password2 : {password2}")
+            if password1 and password2:
+                if password1 == password2:
+                    # messages.error(request, 'Passwords matched')
+                    if is_valid_password(password1):
+                        # messages.success(request, 'Password is valid')
+                        logged_in_user = request.user.id
+                        try:
+                            user = User.objects.get(id=logged_in_user)
+                            user.set_password(password1)
+                            user.save()
+
+                            #after the password is changed log the user back in 
+                            login_user_data = authenticate(username=username,password=password1)
+                            if login_user:
+                                login_user(request,login_user_data)
+                                return redirect(reverse("dashboardPage"))
+                            else:
+                                return JsonResponse({'status':404,'error':'Bad User credentials'},status=404)
+                            return redirect(reverse("ChangePasswordPage"))
+                        except User.DoesNotExist:
+                            messages.success(request, 'User does not exist')
+                            return render(request,'auth_user/changeUserPass.html')
+                    else:
+                        messages.error(request, 'Password must be a combination of numbers, letters and @ symbol')
+                        messages.error(request, 'Password must be of length >= 6')
+                    return render(request,'auth_user/changeUserPass.html')
+                else:
+                    messages.success(request, 'Password do not match')
+                    return render(request,'auth_user/changeUserPass.html')
+            else:
+                messages.success(request, 'Password must not be empty')
+                return render(request,'auth_user/changeUserPass.html')
+    else:
+        return redirect("loginUserPage")
+# This function should be accesible after the user is logged in ends

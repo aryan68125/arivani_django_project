@@ -14,4 +14,6 @@ urlpatterns=[
     path('resetPasswordPage/',resetPasswordPage,name="resetPasswordPage"),
     path('resetPassword_pass.',resetPassword_pass,name="resetPassword_pass"),
     path('logoutUser/',logoutUser,name="logoutUser"),
+    path('ChangePasswordPage/',ChangePasswordPage,name="ChangePasswordPage"),
+    path('ChangePassword/',ChangePassword,name="ChangePassword"),
 ]

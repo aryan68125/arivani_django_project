@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django_rename_app",
     'hr_app',
     'employee',
+    'manager',
 ]
 
 MIDDLEWARE = [

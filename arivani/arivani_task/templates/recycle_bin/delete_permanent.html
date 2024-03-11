@@ -4,7 +4,12 @@
 {% block content %}
 <div class="container mb-2">
     <div class="header_recyclebin">  
+        {% if title == 'emp' %}
         <a class="btn btn-dark" href="{% url 'recycleBinPage_emp' %}"><i class="fa-solid fa-arrow-left"></i></a>
+        {% elif title == 'hr' %}
+        {% elif title == 'manager' %}
+        <a class="btn btn-dark" href="{% url 'recycleBinPage_manager' %}"><i class="fa-solid fa-arrow-left"></i></a>
+        {% endif %}
     </div>
     <div class="row">
         {% if error %}
@@ -19,14 +24,24 @@
                     Type 'DELETE' to record permanently
                 </button>
               </h2>
+              {% include "django_messeges/django_messeges.html" %}
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                 <div class="accordion-body">
                     <div class="row">
+                        {% if title == 'emp' %}
                         <form action="{% url "deleteDataPermanently" %}" method="POST">
                             {% csrf_token %}
                             <input type="text" class="form-control" id="employeeID" name="delete_text" placeholder="DELETE">
                             <button class="btn btn-danger mt-2">DELETE</button>
                         </form>
+                        {% elif title == 'hr' %}
+                        {% elif title == 'manager' %}
+                        <form action="{% url "deleteDataPermanently_manager" %}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" id="employeeID" name="delete_text" placeholder="DELETE">
+                            <button class="btn btn-danger mt-2">DELETE</button>
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
               </div>
