@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from manager.models import *
 
 from django.contrib import messages
+
+#GET hr's from hr table
+from hr_app.models import *
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def ManagerPage(request):
@@ -13,18 +17,39 @@ def ManagerPage(request):
         if request.method == 'GET':  # Corrected method check
             manager = ManagerModel.objects.all().filter(is_deleted=0,created_by=logged_in_user)
             manager_deleted = ManagerModel.objects.all().filter(is_deleted=1,created_by=logged_in_user).count()
+            hr_list = Hr_model.objects.all().filter(is_deleted=0)
+            hr_under_manager_count = {}
+            hr_list_under_manager = {}
+            for manager_instance in manager:
+                hr_under_manager_count [manager_instance.id] = manager_instance.hr_under_manager.count()
+                # print(f" manager_id: {manager_instance.id} manager_name: {manager_instance.name}, selected_hr_list: {manager_instance.hr_under_manager.all().count()}")
+                hr_list_name = []
+                for hr in manager_instance.hr_under_manager.all():
+                    hr_list_name.append(hr.name)
+                hr_list_under_manager[manager_instance.id] = hr_list_name
+                print(hr_list_under_manager)
+
             data = {
                 'managers': manager,
-                'manager_deleted':manager_deleted
+                'manager_deleted':manager_deleted,
+                'hr_list':hr_list,
+                'hr_under_manager_count':hr_under_manager_count,
+                'hr_list_under_manager':hr_list_under_manager
                 }
             return render(request, 'manager/manager.html', data)
     else:
         return redirect("loginUserPage")
+
 def create_data(request):
     if request.user.is_authenticated:
         if request.method=='POST':
             managerID = request.POST.get('managerID')
             name = request.POST.get('name')
+            #TESTING CODE 
+            #create a foreign key which stores hr_id field which links hr table to the manager table
+            selected_hr_list = request.POST.getlist('select_hr')
+            print(selected_hr_list)
+            #TESTING CODE 
             logged_in_user = request.user.id
             user = User.objects.get(id=logged_in_user)
             if managerID and name:
@@ -33,15 +58,16 @@ def create_data(request):
                         manager = ManagerModel.objects.all().filter(managerID=managerID, name=name,created_by=user)
                         user = User.objects.get(id=logged_in_user)
                         if not manager:
-                           
-                                ManagerModel.objects.create(
+                                manager = ManagerModel.objects.create(
                                     managerID=managerID,
                                     name=name,
                                     created_by=user,
                                     status=True,
                                 )
+                                for hr_id in selected_hr_list:
+                                    hr_instance = get_object_or_404(Hr_model, pk=hr_id)
+                                    manager.hr_under_manager.add(hr_instance)
                                 return redirect(reverse('ManagerPage'))
-                            
                         else:
                             return render(request,'manager/manager.html',{'error':'Manager ID is not unique'})
                     else:
@@ -54,6 +80,7 @@ def create_data(request):
             return render(request,'manager/manager.html',{'error':'Bad Request'})
     else:
         return redirect("loginUserPage")
+
 ID = {}
 def update_data_page(request,pk):
     if request.user.is_authenticated:
@@ -63,15 +90,17 @@ def update_data_page(request,pk):
             try:
                 manager = ManagerModel.objects.get(id=pk)
                 managers = ManagerModel.objects.all().filter(is_deleted=0,created_by=user)
+                hr_list = Hr_model.objects.all().filter(is_deleted=0)
                 # save id for later use
                 ID.clear()
                 ID['id']=pk
                 print(f"ID saved = {ID['id']}")
-                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers})
+                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers,'hr_list':hr_list})
             except ManagerModel.DoesNotExist:
                 return render(request,'manager/manager.html',{'error':'Manager Does not Exist'})
     else:
         return redirect("loginUserPage")
+
 def update_data(request):
     if request.user.is_authenticated:
         if request.method=='POST':
@@ -79,6 +108,11 @@ def update_data(request):
             print(f"id : {id}")
             managerID = request.POST.get('managerID')
             name = request.POST.get('name')
+            #TESTING CODE 
+            #create a foreign key which stores hr_id field which links hr table to the manager table
+            selected_hr_list = request.POST.getlist('select_hr')
+            print(selected_hr_list)
+            #TESTING CODE 
             logged_in_user = request.user.id
             user = User.objects.get(id=logged_in_user)
             if managerID and name:

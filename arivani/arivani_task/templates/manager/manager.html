@@ -3,6 +3,7 @@
 {% block title %}{% endblock title %}
 {% block content %}
 <link href="{% static 'css/employee/employee.css' %}" rel="stylesheet"/>
+
 <div class="container">
   <h3>Manager Management</h3>
   <!--Recycle Page Employee Management-->
@@ -78,6 +79,20 @@
                                     <label class="visually-hidden" for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{data.name}}">
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                              {% if hr_list %}
+                                 <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
+                                        <!--Get options from hr table-->
+                                        {% for item in hr_list%}
+                                           <option value={{ item.id }}>{{ item.name }}</option>
+                                        {% endfor %}
+                                  </select>  
+                              {% else %}
+                                  <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
+                                       <option>--No Data--</option>
+                                  </select> 
+                              {% endif %} 
+                            </div>
                         </div>
                         <div class="row mt-3">
                             <div class="row mb-3">
@@ -102,6 +117,20 @@
                             <div class="col-lg-6 col-md-6 col-sm-12">
                                     <label class="visually-hidden" for="name">Name</label>
                                     <input type="text" class="form-control" id="name" name="name" placeholder="Name of Manager">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                              {% if hr_list %}
+                              <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
+                                     <!--Get options from hr table-->
+                                     {% for item in hr_list%}
+                                           <option value={{ item.id }}>{{ item.name }}</option>
+                                     {% endfor %}
+                               </select>  
+                           {% else %}
+                               <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
+                                    <option>--No Data--</option>
+                               </select> 
+                           {% endif %} 
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -128,6 +157,7 @@
                 <th scope="col">Action</th>
                 <th scope="col">Manager ID</th>
                 <th scope="col">Name</th>
+                <th scope="col">Hr Under Manager</th>
               </tr>
             </thead>
             <tbody id="table_data">
@@ -149,6 +179,35 @@
                     </td>
                     <td>{{ item.managerID }}</td>
                     <td>{{ item.name }}</td>
+                    <td>
+                      <div class="dropdown">
+                        {% if hr_under_manager_count %}
+                             <button class="btn btn-secondary " id="hr_button" style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              {% for key, value in hr_under_manager_count.items %}
+                              {% if key == item.id %}
+                              {{value}}
+                              {% endif %}
+                              {% endfor %}
+                             </button>
+                             <ul class="dropdown-menu menu-dark">  
+                                   {% for key, value in hr_list_under_manager.items %}
+                                   {% if key == item.id %}
+                                   {{key}} {{value}}
+                                   <!--use for loop to print all the values of hr names asssociated with the manager's primary key-->
+                                   {% endif %}
+                                   {% endfor %}
+                                   <li><a class="dropdown-item text-center text-danger" href="{% url 'delete_data_manager' pk=item.id %}"><i class="fa-solid fa-trash"></i></a></li>
+                             </ul>
+                        {% else %}
+                             <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                               ...
+                             </button>
+                             <ul class="dropdown-menu menu-dark">  
+                                   <li>No Hr Assigned at the Moment</li>
+                             </ul>
+                        {% endif %}
+                        </div>
+                  </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -163,4 +222,5 @@
           {% endif %}
     </div>
 </div>
+<script src="{% static 'js/manager/manager.js' %}"></script>
 {% endblock content %}
