@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<div class="container">
+    <div class="row my-2">
+        <div class="col-sm-1">
+            <a class="btn btn-dark" href="{% url 'ManagerPage' %}"><i class="fa-solid fa-arrow-left"></i></a>
+        </div>
+        <div class="col-sm-11">
+            <h3 class="ms-3">Hr Under Manager Details</h3>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    {% if manager and hr %}
+                    {{hr.name}}'s Details Working Under {{manager.name}}
+                    {% endif %}
+                    {% include 'django_messeges/django_messeges.html' %}
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <!--Hr details working under manager-->
+                    
+                        {% if manager and hr %}
+                        <form action="{% url 'update_hr_under_manager_details' %}" method='POST'>
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="hrID">Hr ID</label>
+                                    <input type="text" class="form-control" id="hrID" name="managerID" value="{{hr.HrID}}">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{hr.name}}">
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <button class="btn btn-primary mx-auto" id = "update_button" style="width:20%" type="submit">Save Changes</button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

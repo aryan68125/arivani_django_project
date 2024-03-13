@@ -9,7 +9,6 @@ from django.contrib import messages
 #GET hr's from hr table
 from hr_app.models import *
 from django.shortcuts import get_object_or_404
-# Create your views here.
 
 def ManagerPage(request):
     if request.user.is_authenticated:
@@ -22,12 +21,11 @@ def ManagerPage(request):
             hr_list_under_manager = {}
             for manager_instance in manager:
                 hr_under_manager_count [manager_instance.id] = manager_instance.hr_under_manager.count()
-                # print(f" manager_id: {manager_instance.id} manager_name: {manager_instance.name}, selected_hr_list: {manager_instance.hr_under_manager.all().count()}")
-                hr_list_name = []
+                hr_list_data = {}
                 for hr in manager_instance.hr_under_manager.all():
-                    hr_list_name.append(hr.name)
-                hr_list_under_manager[manager_instance.id] = hr_list_name
-                print(hr_list_under_manager)
+                    hr_list_data[hr.id] = hr.name
+                hr_list_under_manager[manager_instance.id] = hr_list_data
+                # print(hr_list_under_manager)
 
             data = {
                 'managers': manager,
@@ -48,7 +46,6 @@ def create_data(request):
             #TESTING CODE 
             #create a foreign key which stores hr_id field which links hr table to the manager table
             selected_hr_list = request.POST.getlist('select_hr')
-            print(selected_hr_list)
             #TESTING CODE 
             logged_in_user = request.user.id
             user = User.objects.get(id=logged_in_user)
@@ -91,11 +88,27 @@ def update_data_page(request,pk):
                 manager = ManagerModel.objects.get(id=pk)
                 managers = ManagerModel.objects.all().filter(is_deleted=0,created_by=user)
                 hr_list = Hr_model.objects.all().filter(is_deleted=0)
+                hr_under_manager_count = {}
+                hr_list_under_manager = {}
+                hr_not_under_manager = {}
+                for manager_instance in managers:
+                    hr_under_manager_count [manager_instance.id] = manager_instance.hr_under_manager.count()
+                    hr_list_data = {}
+                    hr_list_not_under_manager={}
+                    for hr in manager_instance.hr_under_manager.all():
+                        hr_list_data[hr.id] = hr.name
+
+                        #get hr that are not under manager
+                        hr_not_under_manager_queryset = Hr_model.objects.exclude(id=hr.id)
+                        for hr_not in hr_not_under_manager_queryset:
+                            hr_list_not_under_manager[hr_not.id] = hr_not.name
+                    hr_list_under_manager[manager_instance.id] = hr_list_data
+                    hr_not_under_manager['hr_not_u_m'] = hr_list_not_under_manager
                 # save id for later use
                 ID.clear()
                 ID['id']=pk
                 print(f"ID saved = {ID['id']}")
-                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers,'hr_list':hr_list})
+                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers,'hr_list':hr_list, 'hr_under_manager_count':hr_under_manager_count,'hr_list_under_manager':hr_list_under_manager, 'hr_not_under_manager':hr_not_under_manager})
             except ManagerModel.DoesNotExist:
                 return render(request,'manager/manager.html',{'error':'Manager Does not Exist'})
     else:
@@ -111,7 +124,6 @@ def update_data(request):
             #TESTING CODE 
             #create a foreign key which stores hr_id field which links hr table to the manager table
             selected_hr_list = request.POST.getlist('select_hr')
-            print(selected_hr_list)
             #TESTING CODE 
             logged_in_user = request.user.id
             user = User.objects.get(id=logged_in_user)
@@ -124,10 +136,18 @@ def update_data(request):
                         manager.name = name
                         manager.updated_by=user
                         manager.save()
+
+                        # Clear existing hr_under_manager entries
+                        manager.hr_under_manager.clear()
+                        
+                        # Add selected Hr_model instances to the manager
+                        for hr_id in selected_hr_list:
+                            hr_instance = Hr_model.objects.get(id=hr_id)
+                            manager.hr_under_manager.add(hr_instance)
                         return redirect(reverse('ManagerPage'))
                         # return redirect(reverse('update_data_page', kwargs={'pk': id}))
                         
-                    except Employee.DoesNotExist:
+                    except Manager.DoesNotExist:
                         return render(request,'manager/manager.html',{'error':'Manager Does not exist'})
                 else:
                     return render(request,'manager/manager.html',{'error':'ManagerId is not a digit or is -ve'})
@@ -144,14 +164,13 @@ def delete_data(request,pk):
             logged_in_user = request.user.id
             user = User.objects.get(id=logged_in_user)
             try:
-                print(f"id : {pk}")
                 manager = ManagerModel.objects.get(id=pk,created_by=user)
                 manager.is_deleted=1
                 manager.deleted_by=user
                 manager.deleted_at=timezone.now()
                 manager.save()
                 return redirect(reverse('ManagerPage'))
-            except Employee.DoesNotExist:
+            except Manager.DoesNotExist:
                 return render(request,'manager/manager.html',{'error':'Manager Does not exist'})
         else:
             return render(request,'manager/manager.html',{'error':'Bad Request'})
@@ -236,8 +255,8 @@ def deleteDataPermanently(request):
                     messages.error(request, 'Input fields can not be empty')
                     return render(request,'recycle_bin/delete_permanent.html')
                     # return render(request,'recycle_bin/delete_permanent.html',{'error':'Input fields can not be empty'})
-            except Employee.DoesNotExist:
-                messages.error(request, 'Employee Does not Exist')
+            except ManagerModel.DoesNotExist:
+                messages.error(request, 'Manager Does not Exist')
                 return render(request,'recycle_bin/delete_permanent.html')
                 # return render(request,'recycle_bin/delete_permanent.html',{'error':'Employee Does not Exist'})
         else:
@@ -252,3 +271,51 @@ def deleteDataPermanently(request):
 # Recycle bin functionality ends
 
 
+# Show hr details working under manager 
+hr_under_manager_id_detail = {}
+def hr_under_manager_details_page(request,manager_pk,hr_pk):
+    if request.user.is_authenticated:
+        if request.method=='GET':
+            manager_id = manager_pk
+            hr_id = hr_pk
+            hr_under_manager_id_detail.clear()
+            hr_under_manager_id_detail['id']=hr_id
+            try:
+                manager = ManagerModel.objects.get(pk=manager_id)
+                hr = Hr_model.objects.get(pk=hr_id)
+                context = {
+                    'manager' : manager,
+                    'hr' : hr,
+                }
+                return render(request,'manager/hr_under_manager_detail_page.html',context)
+            except ManagerModel.DoesNotExist:
+                messages.error(request, 'Maanager does not exist')
+                return render(request,'manager/hr_under_manager_detail_page.html')
+            except Hr_model.DoesNotExist:
+                messages.error(request, 'Hr does not exist')
+                return render(request,'manager/hr_under_manager_detail_page.html')
+    else:
+        return redirect("loginUserPage")
+
+def update_hr_under_manager_details(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            hr_id = hr_under_manager_id_detail['id']
+            HrID = request.POST.get('managerID')
+            name = request.POST.get('name')
+            logged_in_user = request.user.id
+            user = User.objects.get(id=logged_in_user)
+            try:
+                hr = Hr_model.objects.get(pk=hr_id)
+                hr.HrID = HrID
+                hr.name = name
+                hr.updated_by = user
+                hr.updated_at = timezone.now()
+                hr.save()
+                return redirect("ManagerPage")
+            except Hr_model.DoesNotExist:
+                messages.error(request, 'Hr does not exist')
+                return render(request,'manager/hr_under_manager_detail_page.html')
+    else:
+        return redirect("loginUserPage")
+# Show hr details working under manager 

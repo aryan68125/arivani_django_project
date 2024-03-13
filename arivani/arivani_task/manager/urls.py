@@ -10,4 +10,7 @@ urlpatterns = [
     path('restoreData_emp/<pk>',restoreData_emp,name="restoreData_emp_manager"),
     path('deleteDataPermanentlyPage/<pk>',deleteDataPermanentlyPage,name="deleteDataPermanentlyPage_manager"),
     path('deleteDataPermanently/',deleteDataPermanently,name="deleteDataPermanently_manager"),
+
+    path('hr_under_manager_details_page/<manager_pk>/<hr_pk>',hr_under_manager_details_page,name="hr_under_manager_details_page"),
+    path('update_hr_under_manager_details/',update_hr_under_manager_details,name="update_hr_under_manager_details"),
 ]

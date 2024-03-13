@@ -80,12 +80,74 @@
                                     <input type="text" class="form-control" id="name" name="name" value="{{data.name}}">
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-12">
-                              {% if hr_list %}
+                                 {% if hr_list %}
+                                 
+                                     {% comment %} 
+                                     {% if hr_list_under_manager %}
+                                     <p>hr under manager</p>
+                                        {% for key, value in hr_list_under_manager.items %}
+                                            <!--{{key}} is the manager pk-->
+                                            <!--{{value}} is the key value pair of hr working under a manager-->
+                                            {% if data.id == key %}
+                                                {{value}}
+                                                {% for hr_key, hr_name in value.items %}
+                                                  {{hr_key}} {{hr_name}}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                     {% endif %}
+
+                                     {% if hr_not_under_manager %}
+                                     <p>hr not under manager</p>
+                                            {% for hr_n_key, hr_n_value in hr_not_under_manager.items %}
+                                                {{ hr_n_key }} {{ hr_n_value }}
+                                                {% for hr_n_k,hr_n_v in hr_n_value.items %}
+                                                    {{hr_n_k}} {{hr_n_v}}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endif %} 
+                                        {% endcomment %}
+                                        
                                  <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
                                         <!--Get options from hr table-->
-                                        {% for item in hr_list%}
+                                        {% if hr_list_under_manager %}
+                                              {% for key, value in hr_list_under_manager.items %}
+                                                  <!--{{key}} is the manager pk-->
+                                                  <!--{{value}} is the key value pair of hr working under a manager-->
+                                                  {% if data.id == key %}
+                                                      {% comment %} {{value}} {% endcomment %}
+                                                      {% for hr_key, hr_name in value.items %}
+                                                        {% comment %} {{hr_key}} {{hr_name}} {% endcomment %}
+                                                        <option value={{ hr_key }} selected>{{ hr_name }}</option>
+                                                      {% endfor %}
+                                                  {% else %}
+                                                      {% comment %} <option value={{ item.id }}>{{ item.name }}</option> {% endcomment %}
+                                                  {% endif %}
+                                              {% endfor %}
+                                              {% if hr_not_under_manager %}
+                                                  {% for hr_n_key, hr_n_value in hr_not_under_manager.items %}
+                                                      {% for hr_n_k,hr_n_v in hr_n_value.items %}
+                                                          <option value={{ hr_n_k }}>{{ hr_n_v }}</option>
+                                                      {% endfor %}
+                                                  {% endfor %}
+                                              {% endif %}
+                                        {% else %}
+                                        {% if hr_not_under_manager %}
+                                            {% for hr_n_key, hr_n_value in hr_not_under_manager.items %}
+                                                {% for hr_n_k,hr_n_v in hr_n_value.items %}
+                                                    <option value={{ hr_n_k }}>{{ hr_n_v }}</option>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        {% comment %} {% if hr_not_under_manager %}
+                                            {% for hr_n_key,hr_n_value in hr_not_under_manager.items %}
+                                                <option value={{ hr_n_key }}>{{ hr_n_value }}</option>
+                                            {% endfor %}
+                                        {% endif %} {% endcomment %}
+                                        {% comment %} {% for item in hr_list%}
                                            <option value={{ item.id }}>{{ item.name }}</option>
-                                        {% endfor %}
+                                        {% endfor %} {% endcomment %}
+                                        {% endif %}
                                   </select>  
                               {% else %}
                                   <select class="form-select my-2"  data-placeholder="Select Hr" multiple="multiple" name="select_hr">
@@ -192,11 +254,15 @@
                              <ul class="dropdown-menu menu-dark">  
                                    {% for key, value in hr_list_under_manager.items %}
                                    {% if key == item.id %}
-                                   {{key}} {{value}}
+                                   <!--{{key}} is the manager id-->
+                                    <!--{{value}} is the dictionary that contains key value pair of hr-->
                                    <!--use for loop to print all the values of hr names asssociated with the manager's primary key-->
+                                   {% for hr_key,hr_name in value.items %}
+                                   <!--pass key (manager pk) and hr_key (hr pk) in the dynamic link to open hr detail-->
+                                   <li><a class="dropdown-item text-center text-danger" href="{% url 'hr_under_manager_details_page' manager_pk=key hr_pk=hr_key %}">{{hr_name}}</a></li>
+                                   {% endfor %}
                                    {% endif %}
                                    {% endfor %}
-                                   <li><a class="dropdown-item text-center text-danger" href="{% url 'delete_data_manager' pk=item.id %}"><i class="fa-solid fa-trash"></i></a></li>
                              </ul>
                         {% else %}
                              <button class="btn btn-secondary " style="background:#c4c1e0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
