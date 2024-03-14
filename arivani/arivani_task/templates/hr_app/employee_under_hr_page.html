@@ -1,0 +1,76 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/hr_app/hr_app.css' %}" rel="stylesheet"/>
+<div class="container">
+
+  <script>
+    var employee_under_hr_list_url = '{% url "employees_under_hr_list" %}';
+    var Update_employee_under_hr_url = '{% url "Update_employee_under_hr" %}';
+    var hr_home_url = '{% url "hr_home" %}';
+  </script>
+
+    <div class="row">
+        <div class="col-sm-1">
+            <button class="btn btn-dark" id="back_button"><i class="fa-solid fa-arrow-left"></i></button>
+        </div>
+        <div class="col-sm-11">
+            <h3>Employee List under Hr</h3>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Update Employee Details under <span id="hr_name_container" class="fw-bolder"></span>
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="employeeID">Employee ID</label>
+                                <input type="text" class="form-control" id="employeeID" placeholder="HrID">
+                                <p class ="text-danger" id="employeeID_error" style="display:none">employeeID field can't be empty</p>
+                                <p class ="text-danger" id="employeeID_number_error" style="display:none">employeeID should be a number</p>
+                                <p class ="text-danger" id="employeeID_positive_number_error" style="display:none">employeeID should be a positive number</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="name">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name of Hr">
+                                <p class ="text-danger" id="name_error" style="display:none">name field can't be empty</p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="table-responsive scrollable-table">
+          <table class="table table-hover align-middle" id="hr_table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">record_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/hr_app/employee_under_hr_page.js' %}"></script>
+{% endblock content %}

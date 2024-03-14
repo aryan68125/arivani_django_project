@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-# # Create your models here.
+from employee.models import *
+
 class Hr_model(models.Model):
     HrID = models.IntegerField()
     name=models.CharField(max_length=50)
@@ -14,5 +15,6 @@ class Hr_model(models.Model):
     restored_at = models.DateTimeField(null=True)
     restored_by = models.ForeignKey(User, on_delete=models.CASCADE,related_name="restored_hr",null=True)
     status = models.BooleanField(default=True)
+    employees_under_hr = models.ManyToManyField(Employee)
     def __str__(self):
         return self.name

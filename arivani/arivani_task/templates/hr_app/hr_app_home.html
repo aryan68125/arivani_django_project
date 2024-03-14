@@ -15,6 +15,9 @@
     var recyclebin_Data_hr_url = '{% url "recyclebin_Data_hr" %}'
     var restore_data_hr_url = '{% url "restore_data_hr" %}'
     var delete_data_permanently_hr_url = '{% url "delete_data_permanently_hr" %}'
+    
+    var send_hr_id_to_open_employee_under_hr_page_url = '{% url "employees_under_hr" %}'
+    var employees_under_hr_page_url = '{% url "employees_under_hr_page" %}'
   </script>
 
 <h3>Hr Management</h3>
@@ -102,6 +105,13 @@
                                 <input type="text" class="form-control" id="name" placeholder="Name of Hr">
                                 <p class ="text-danger" id="name_error" style="display:none">name field can't be empty</p>
                         </div>
+                    </div>
+                    <div class="row my-2">
+                      <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select my-2"  data-placeholder="Select Employee" multiple="multiple" id="select_employee">
+                              <option value="">--No Employee--</option>
+                        </select>
+                      </div>
                     </div>
                     <div class="row mt-3">
                         <div class="row mb-3">

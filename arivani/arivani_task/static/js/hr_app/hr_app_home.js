@@ -34,9 +34,11 @@ ID= 0
 $('body').on('click','#save_button',function(){
  var hrID = $('#hrID').val()
  var name = $('#name').val()
+ var employee_under_Hr = $('#select_employee').val()
  var data = {
     hrID : hrID,
-    name:name
+    name:name,
+    employee_under_Hr:employee_under_Hr,
  }
  validate(data)
 })
@@ -90,17 +92,24 @@ function validate(data){
         else{
             if (ID!=0){
                 //update data
-                console.log("update data")
                 data.id = ID
                 update_data(data)
             }
             else{
-                console.log("insert data")
                 send_data(data)
             }
         }
     }
 }
+/* Create options for selector dynamically */
+function create_options_multi_select_SELECTOR(data,i){
+    $('#select_employee').append(
+        `
+        <option value="${data.id}">${data.name}</option>
+        `
+    )
+}
+/* Create options for selector dynamically */
 function send_data(data){
     fetch(
         insert_data_url,{
@@ -149,10 +158,32 @@ function get_data(){
     .then(data=>{
         if (data.status==200){
             //get data from db
+            //get all employees from employee tables
+            $('#select_employee').empty()
+            for(var i=0;i<data.employees.length;i++){
+                create_options_multi_select_SELECTOR(data.employees[i],i)
+            }
+            //get all employee counts that are working under hr
+            // console.log(data.employees_under_hr_count)
+            //access values based on keys in an object
+            // console.log(data.employees_under_hr_count['41'])
+            // console.log(data.employees_under_hr_count[`${data.context[13].id}`])
+            //get all hr's from hr table
             // console.log(data.context)
+            // console.log(data.context[0])
+            // console.log(data.context[13].id)
             $('#table_data').empty()
             for(var i=0;i<data.context.length;i++){
-                create_table(data.context[i],i)
+                // console.log(data.context[i].name)
+                //     console.log(i)
+                //     console.log(data.context[i].id)
+                if (data.employees_under_hr_count[`${data.context[i].id}`]){
+                    create_table(data.context[i],i,data.employees_under_hr_count[`${data.context[i].id}`])
+                    
+                }
+                else{
+                    create_table(data.context[i],i)
+                }
             }
         }
         else{
@@ -168,30 +199,87 @@ function get_data(){
     get_deleted_count_hr()
 }
 //create table 
-function create_table(data,i){
-//    console.log(data)
-//    console.log(i)
-      $('#table_data').append(
-        `
-        <tr>
-                <th scope="row">${i+1}</th>
-                <th scope="row" style="display:none">${data.id}</th>
-                <td><div id="action_column_${i+1}"><button class="btn btn-light" onclick="action('action_column_${i+1}','${data.id}','${data.HrID}','${data.name}')" style="background:#c4c1e0">...</button></div></td>
-                <td>${data.HrID}</td>
-                <td>${data.name}</td>
-        </tr>
-        `
-      )
+function create_table(data,i,number_of_employees_under_hr){
+    if (number_of_employees_under_hr){
+        // console.log(number_of_employees_under_hr)
+        $('#table_data').append(
+            `
+            <tr>
+                    <th scope="row">${i+1}</th>
+                    <th scope="row" style="display:none">${data.id}</th>
+                    <td><div id="action_column_${i+1}"><button class="btn btn-light" onclick="action('action_column_${i+1}','${data.id}','${data.HrID}','${data.name}')" style="background:#c4c1e0">...</button></div></td>
+                    <td>${data.HrID}</td>
+                    <td>${data.name}</td>
+                    <td><div id="employee_under_hr_column_${i+1}"><button class="btn btn-light" onclick="open_employee_list_under_hr('${data.id}')" style="background:#c4c1e0">${number_of_employees_under_hr}</button></div></td>
+            </tr>
+            `
+          )
+    }
+    else{
+        $('#table_data').append(
+            `
+            <tr>
+                    <th scope="row">${i+1}</th>
+                    <th scope="row" style="display:none">${data.id}</th>
+                    <td><div id="action_column_${i+1}"><button class="btn btn-light" onclick="action('action_column_${i+1}','${data.id}','${data.HrID}','${data.name}')" style="background:#c4c1e0">...</button></div></td>
+                    <td>${data.HrID}</td>
+                    <td>${data.name}</td>
+                    <td><div id="employee_under_hr_column_${i+1}"><button class="btn btn-light" style="background:#c4c1e0">...</button></div></td>
+            </tr>
+            `
+          )
+    }
 }
 function action(element_id,id,HrID,name){
-    // console.log("action button clicked")
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <button class="btn btn-danger" onclick="delete_data('${id}')"><i class="fa-solid fa-trash"></i></button>
     <button class="btn btn-light" style="background:#8dc6ff" onclick="populate_form('${id}','${HrID}','${name}')"><i class="fa-solid fa-pen"></i></button>
     `)
 }
-
+/* open a new page that has the list of all the employees that are working under hr */
+function open_employee_list_under_hr(hr_pk){
+    console.log(hr_pk)
+    var data={
+        hr_pk:hr_pk
+    }
+    // first send hr's primary key then go to the next page
+    fetch(
+        send_hr_id_to_open_employee_under_hr_page_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if(data.status==200){
+            window.location.href=employees_under_hr_page_url
+        }
+        else if(data.status=400){
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+        else if(data.status==500){
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+    })
+}
+/* open a new page that has the list of all the employees that are working under hr */
 function populate_form(id,HrID,name){
     ID = 0
     ID = id
@@ -218,7 +306,6 @@ function update_data(data){
         }
     ).then(response=>response.json())
     .then(data=>{
-        console.log(data)
         if (data.status==200){
             get_data()
             reset_form()
@@ -373,11 +460,9 @@ function get_recyclebin_data(){
   ).then(response=>response.json())
   .then(data=>{
     if(data.status==200){
-        // console.log(data)
         //call create table function here
         $('#recycle_bin_table_data').empty()
         for(var i=0;i<data.data.length;i++){
-            // console.log(data.data[i])
             create_recycil_bin_table(data.data[i],i)
         }
     }
@@ -393,8 +478,6 @@ function get_recyclebin_data(){
   })  
 }
 function create_recycil_bin_table(data,i){
-    //    console.log(data)
-    //    console.log(i)
           $('#recycle_bin_table_data').append(
             `
             <tr>
@@ -417,8 +500,6 @@ function action_rb(element_id,id,HrID,name){
 }
 
 function restore_data_rb(id){
-    // console.log("Data to be restored")
-    // console.log(id)
     var data={
         id:id
     }

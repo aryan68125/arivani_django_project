@@ -11,4 +11,9 @@ urlpatterns=[
     path('recyclebin_Data/',recyclebin_Data,name="recyclebin_Data_hr"),
     path('restore_data_hr/',restore_data_hr,name="restore_data_hr"),
     path('delete_data_permanently/',delete_data_permanently,name="delete_data_permanently_hr"),
+
+    path('employees_under_hr/',employees_under_hr,name="employees_under_hr"),
+    path('employees_under_hr_page/',employees_under_hr_page,name="employees_under_hr_page"),
+    path('employees_under_hr_list/',employees_under_hr_list,name="employees_under_hr_list"),
+    path('Update_employee_under_hr/',Update_employee_under_hr,name="Update_employee_under_hr"),
 ]
