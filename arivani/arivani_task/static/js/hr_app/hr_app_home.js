@@ -239,7 +239,6 @@ function action(element_id,id,HrID,name){
 }
 /* open a new page that has the list of all the employees that are working under hr */
 function open_employee_list_under_hr(hr_pk){
-    console.log(hr_pk)
     var data={
         hr_pk:hr_pk
     }
@@ -280,11 +279,82 @@ function open_employee_list_under_hr(hr_pk){
     })
 }
 /* open a new page that has the list of all the employees that are working under hr */
+selected_employee = []
+function reset_employee_multi_select_dropdown(){
+    fetch(
+        send_all_employees_reset_dropdown_multiSelect_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if (data.status==200){
+            for(var i=0;i<data.context.length;i++){
+                create_options_multi_select_SELECTOR(data.context[i],i)
+            }
+            for(var i=0;i<selected_employee.length;i++){
+                $("#select_employee option[value='" + selected_employee[i] + "']").prop("selected", true);
+            } 
+        }
+        else{
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+    })
+}
 function populate_form(id,HrID,name){
     ID = 0
     ID = id
     $('#hrID').val(`${HrID}`)
     $('#name').val(`${name}`)
+    // TESTING get all the employees working under hr and set it to the select field that has multi-select capability
+    
+    var data = {
+        id : ID
+    }
+    fetch(
+        send_all_employees_under_hr_UPDATE_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if(data.status==200){
+            //set the multi-select field to the employees under hr
+            $('#select_employee').empty()
+            reset_employee_multi_select_dropdown()
+            selected_employee.length = 0;
+            for(var i=0;i<data.context.length;i++){                
+                selected_employee.push(data.context[i].id)
+            }     
+        }
+        else{
+            //do nothing show error
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: data.error,
+                showConfirmButton: false,
+                timer: 1500,
+            })
+        }
+    })
+// TESTING
+
     $('#acc_title').empty()
     $('#acc_title').append(
         `
@@ -293,7 +363,7 @@ function populate_form(id,HrID,name){
     )
 }
 function update_data(data){
-    
+    console.log(data)
     fetch(
         update_data_url,{
             method:'PUT',
@@ -491,7 +561,6 @@ function create_recycil_bin_table(data,i){
           )
     }
 function action_rb(element_id,id,HrID,name){
-    console.log("action button clicked")
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <button class="btn btn-danger" onclick="delete_data_permanently_rb('${id}')"><i class="fa-solid fa-skull-crossbones"></i></button>

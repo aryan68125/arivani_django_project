@@ -13,6 +13,7 @@ from django.shortcuts import get_object_or_404
 def ManagerPage(request):
     if request.user.is_authenticated:
         logged_in_user=request.user.id
+        user = User.objects.get(id=logged_in_user)
         if request.method == 'GET':  # Corrected method check
             manager = ManagerModel.objects.all().filter(is_deleted=0,created_by=logged_in_user)
             manager_deleted = ManagerModel.objects.all().filter(is_deleted=1,created_by=logged_in_user).count()
@@ -26,8 +27,18 @@ def ManagerPage(request):
                     hr_list_data[hr.id] = hr.name
                 hr_list_under_manager[manager_instance.id] = hr_list_data
                 # print(hr_list_under_manager)
-
-            data = {
+            
+            if user.is_superuser:
+                data = {
+                'managers': manager,
+                'manager_deleted':manager_deleted,
+                'hr_list':hr_list,
+                'hr_under_manager_count':hr_under_manager_count,
+                'hr_list_under_manager':hr_list_under_manager,
+                'is_superuser':1
+                }
+            else:
+                data = {
                 'managers': manager,
                 'manager_deleted':manager_deleted,
                 'hr_list':hr_list,

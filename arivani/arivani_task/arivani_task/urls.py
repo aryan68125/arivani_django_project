@@ -24,4 +24,5 @@ urlpatterns = [
     path('employee/',include('employee.urls')),
     path('manager/',include('manager.urls')),
     path('dashboard/',include('dashboard.urls')),
+    path('sudo_admin/',include('sudo_app.urls')),
 ]

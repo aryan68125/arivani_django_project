@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'hr_app',
     'employee',
     'manager',
+    'sudo_app',
 ]
 
 MIDDLEWARE = [

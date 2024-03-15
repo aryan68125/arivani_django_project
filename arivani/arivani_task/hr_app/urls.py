@@ -16,4 +16,6 @@ urlpatterns=[
     path('employees_under_hr_page/',employees_under_hr_page,name="employees_under_hr_page"),
     path('employees_under_hr_list/',employees_under_hr_list,name="employees_under_hr_list"),
     path('Update_employee_under_hr/',Update_employee_under_hr,name="Update_employee_under_hr"),
+    path('send_all_employees_under_hr_UPDATE/',send_all_employees_under_hr_UPDATE,name="send_all_employees_under_hr_UPDATE"),
+    path('send_all_employees_reset_dropdown_multiSelect/',send_all_employees_reset_dropdown_multiSelect,name="send_all_employees_reset_dropdown_multiSelect"),
 ]

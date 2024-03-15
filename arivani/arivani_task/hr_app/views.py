@@ -12,7 +12,15 @@ from django.core.serializers import serialize
 # Create your views here.
 def dashboard_home(request):
     if request.user.is_authenticated:
-        return render(request,'hr_app/hr_app_home.html')
+        logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        if user.is_superuser:
+            data = {
+                'is_superuser':1,
+            }
+            return render(request,'hr_app/hr_app_home.html',data)
+        else:
+            return render(request,'hr_app/hr_app_home.html')
     else:
         return redirect("loginUserPage")
 
@@ -84,6 +92,42 @@ def get_all_data(request):
     else:
         return redirect("loginUserPage")
 
+def send_all_employees_under_hr_UPDATE(request):
+    if request.user.is_authenticated:
+        is_ajax =  request.headers.get("X-Requested-With")=="XMLHttpRequest"
+        if is_ajax:
+            if request.method=='POST':
+                data = json.load(request)
+                f_data = data.get('payload')
+                hr_id = f_data['id']
+                Hrs = Hr_model.objects.get(id=hr_id)
+                employee_list_under_hr = []
+                for employee in  Hrs.employees_under_hr.all():
+                    employee_list_under_hr.append(Employee.objects.get(id=employee.id))   
+                
+                employee_list = []
+                for item in employee_list_under_hr: 
+                    employee_dict = {}
+                    print (f"employee pk = {item.id} employee id = {item.name}")
+                    employee_dict['id'] = item.id
+                    employee_dict['name'] = item.name
+                    employee_list.append(employee_dict)
+                return JsonResponse({'status':200,'context':employee_list},status=200)
+            else:
+                return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+    else:
+        return redirect("loginUserPage")
+def send_all_employees_reset_dropdown_multiSelect(request):
+    if request.user.is_authenticated:
+        is_ajax = request.headers.get("X-Requested-With")=='XMLHttpRequest'
+        if is_ajax:
+            if request.method=='POST':
+                employees = list(Employee.objects.all().filter(is_deleted=0).values())
+                return JsonResponse({'status':200,'context':employees},status=200)
+            else:
+                return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+    else:
+        return redirect("loginUserPage")
 def update_data(request):
     if request.user.is_authenticated:
         if request.headers.get("X-Requested-With") == "XMLHttpRequest":
@@ -94,6 +138,7 @@ def update_data(request):
                     id = f_data['id']
                     hrID = f_data['hrID']
                     name = f_data['name']
+                    employee_under_hr_data = f_data['employee_under_Hr']
                     logged_in_user = request.user.id
                     user = User.objects.get(id=logged_in_user)
                     print(f"{f_data}")
@@ -108,6 +153,10 @@ def update_data(request):
                                     db_instance.updated_at=timezone.now()
                                     db_instance.status=True
                                     db_instance.save()
+                                    for employee in employee_under_hr_data:
+                                        employee_instance = Employee.objects.get(pk=employee)
+                                        db_instance.employees_under_hr.add(employee_instance)
+
                                     return JsonResponse({'status': 200},status=200)
                                 except Hr_model.DoesNotExist:
                                     return JsonResponse({'status': 404, 'error': 'Record does not exist'}, status=404)

@@ -7,12 +7,21 @@ from django.contrib.auth.models import User
 def employeePage(request):
     if request.user.is_authenticated:
         logged_in_user=request.user.id
+        user = User.objects.get(id=logged_in_user)
         if request.method == 'GET':  # Corrected method check
             employees = Employee.objects.all().filter(is_deleted=0,created_by=logged_in_user)
             employees_deleted = Employee.objects.all().filter(is_deleted=1,created_by=logged_in_user).count()
-            data = {
+            
+            if user.is_superuser==True:
+                data = {
                 'employees': employees,
-                'employees_deleted':employees_deleted
+                'employees_deleted':employees_deleted,
+                'is_superuser':1
+                }
+            else:
+                data = {
+                'employees': employees,
+                'employees_deleted':employees_deleted,
                 }
             return render(request, 'Employee/employee.html', data)
     else:

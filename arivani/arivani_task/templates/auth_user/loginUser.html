@@ -7,6 +7,7 @@
 <script>
     var loginUser = "{% url 'loginUser' %}"
     var dashboard_home="{% url 'dashboardPage' %}"
+    var dashboard_admin = "{% url 'dashboard_admin' %}"
 </script>
 <div class="container mt-5">
     <div class="mx-auto mt-5" style="width:60%;">
@@ -27,9 +28,9 @@
                 </div>
               </div>
 
-              <div class="row mb-3">
+              {% comment %} <div class="row mb-3">
                 <a href="{% url 'registerUserPage' %}" class="font-weight:bolder;" style="text-decoration:none;">Don't have an account?</a>
-              </div>
+              </div> {% endcomment %}
               
               <div class="row mb-3">
                 <a href="{% url 'forgotPasswordPageUsername' %}" class="font-weight:bolder;" style="text-decoration:none;">forgot Password?</a>

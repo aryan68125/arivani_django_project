@@ -59,7 +59,12 @@ function send_data(data){
             timer: 1500,
         }).then((result) => {
             // Redirect the user to the dashboard page
-            window.location.href = dashboard_home;
+            if (data.is_superuser==1){
+              window.location.href = dashboard_admin;
+            }
+            else{
+              window.location.href = dashboard_home;
+            }
         });
               //send user to home page
         }

@@ -36,19 +36,10 @@ function get_employees_under_hr(){
     .then(data=>{
         if(data.status==200){
             console.log(data.context)
-            //employee data under working under hr
-            // console.log(data.context[0])
-            // console.log(data.context[0][0])
-            // console.log(data.context[0][0].name)
-
-            //hr name 
-            // console.log(data.hr_name.hr_name)
-            //set hr's name here
             $('#hr_name_container').empty()
             $('#hr_name_container').text(" " + data.hr_name.hr_name)
             $('#table_data').empty()
             for (var i=0;i<data.context.length;i++){
-                // console.log(data.context[i][0])
                 create_employee_under_hr_table(data.context[i][0],i)
             }
             //create a table to show all the employees that are working under this particular hr
@@ -137,7 +128,7 @@ function send_data(data){
             reset_form()
             Swal.fire({
                 position: "top-end",
-                icon: "error",
+                icon: "success",
                 title: "Employee updated",
                 showConfirmButton: false,
                 timer: 1500,

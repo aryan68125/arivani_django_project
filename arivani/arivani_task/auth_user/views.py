@@ -204,8 +204,12 @@ def loginUser(request):
                 password = login_data['password']
                 user = authenticate(username=username,password=password)
                 if user:
-                    login_user(request,user)
-                    return JsonResponse({'status':200},status=200)
+                    if user.is_superuser == True:
+                        login_user(request,user)
+                        return JsonResponse({'status':200,'is_superuser':1},status=200)
+                    else:
+                        login_user(request,user)
+                        return JsonResponse({'status':200},status=200)
                 else:
                     return JsonResponse({'status':404,'error':'Bad User credentials'},status=404)
             else:
