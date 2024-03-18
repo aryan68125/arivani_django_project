@@ -1,0 +1,138 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/hr_app/hr_app.css' %}" rel="stylesheet"/>
+<div class="container">
+
+  <script>
+
+  </script>
+
+<h3>Hr (Employee manager) Page</h3>
+
+<!--Recycle Page Employee Management-->
+<div class="card">
+  <div class="card-body" style="background:#CFE2FF;">
+    <div class="row">
+      <div class="col-sm-3 ">
+        <div class="row">
+          <div class="col-sm-2 ">
+            <span class="fs-3"  style="font-weight:bolder;"><i class="fa-solid fa-recycle"></i></span>
+          </div>
+          <div class="col-sm-10 ">
+            <h4>Recycle Bin</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 ">
+        
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-2">
+            {% comment %} <form action="{% url 'recycle_bin_hr' %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-secondary " style="background:#c4c1e0" type="submit" aria-expanded="false">
+                ...
+              </button>
+            </form> {% endcomment %}
+            <button id="recycle_bin_btn" class="btn btn-secondary " style="background:#c4c1e0" type="button" aria-expanded="false">
+              ...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="recyclebin_data_card">
+  <div class="card-body">
+    <div class="table-responsive scrollable-table">
+            <table class="table" id="hr_table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col" style="display:none">record_id</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Hr ID</th>
+                  <th scope="col">Name</th>
+                </tr>
+              </thead>
+              <tbody id="recycle_bin_table_data">
+              </tbody>
+          </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Recycle Page Employee Management-->
+
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Add Employee
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                                <label class="visually-hidden" for="hrID">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Username">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                                <label class="visually-hidden" for="name">Name</label>
+                                <input type="text" class="form-control" id="first_name" placeholder="First name">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                          <label class="visually-hidden" for="hrID">Hr ID</label>
+                          <input type="text" class="form-control" id="last_name" placeholder="Last name">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                                <label class="visually-hidden" for="name">Name</label>
+                                <input type="text" class="form-control" id="email" placeholder="Email">
+                        </div>
+                    </div>
+                    {% comment %} <div class="row my-2">
+                      <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select my-2"  data-placeholder="Select Employee" id="">
+                              <option value="">--No Employee--</option>
+                        </select>
+                      </div>
+                    </div> {% endcomment %}
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%">Save</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="table-responsive scrollable-table">
+          <table class="table table-hover align-middle" id="hr_table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">record_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Hr ID</th>
+                <th scope="col">Name</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/hr_app/hr_app_home2.js' %}"></script>
+{% endblock content %}

@@ -324,7 +324,14 @@ def employees_under_hr(request):
 
 def employees_under_hr_page(request):
     if request.user.is_authenticated:
-        return render(request,'hr_app/employee_under_hr_page.html')
+        logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
+        data = {
+            user_role:user_role
+        }
+        return render(request,'hr_app/employee_under_hr_page.html',data)
     else:
         return redirect("loginUserPage")
 
