@@ -19,6 +19,7 @@ $('body').ready(function(){
     get_deleted_user_count()
     get_role_list()
     $('#recycle_bin_table').hide()
+    $('#employeeID').prop('disabled', true);
 })
 function get_user_profile(){
     fetch(
@@ -34,13 +35,14 @@ function get_user_profile(){
     .then(data=>{
         if(data.status==200){
             // console.log(data)
-            // console.log(data.user_list[0])
-            // console.log(data.user_list[0].user)
+            // console.log(data.user_list[0]) //user profile
+            // console.log(data.user_list[0].user) //user data user.id means user's pk 
             $('#table_data').empty()
             for(var i = 0 ; i<data.user_list.length;i++){
-                // console.log(data.user_list[i])
+                // console.log(data.user_list[i]) //user profile
                 // console.log(data.user_list[i].user)
                 // console.log(data.user_list[i].is_deleted)
+                // console.log(data.user_list[i].user) //user data user.id means user's pk 
                 if (data.user_list[i].is_deleted == false){
                     create_table(data.user_list[i],data.user_list[i].user,i)
                 }
@@ -56,7 +58,7 @@ function get_user_profile(){
     })
 }
 function create_table(user_profile_data,user_list,i){
-    // user_profile_data = data.user_list[0],   user_list = data.user_list[0].user
+    // user_profile_data = data.user_list[0],   user_list = data.user_list[0].user, user_pk = data.user_list[0].user.id
     // console.log(user_list.is_active)
     // console.log(user_list.id)
     // console.log(user_profile_data.is_deleted)
@@ -68,7 +70,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -97,7 +99,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -128,7 +130,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -157,7 +159,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -244,13 +246,114 @@ function is_deleted_button_(is_deleted_button_id,user_id){
     // console.log(user_id)
     // console.log(is_deleted_button_id)
 }
-function action_rb(element_id,user_id,userrole_id){
+function action_rb(element_id,user_id,userrole_id,employeeID,username,first_name,last_name,email){
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <button class="btn btn-danger" onclick="delete_user('${user_id}')"><i class="fa-solid fa-trash"></i></button>
-    <button class="btn btn-light" style="background:#8dc6ff" onclick="populate_form('${user_id}','${userrole_id}')"><i class="fa-solid fa-pen"></i></button>
+    <button class="btn btn-light" style="background:#8dc6ff" onclick="populate_form('${user_id}','${userrole_id}','${employeeID}','${username}','${first_name}','${last_name}','${email}')"><i class="fa-solid fa-pen"></i></button>
     `)
 }
+//UPDATE USER DATA LOGIC STARTS
+var user_id_backup = -1
+var userrole_id_backup = -1
+function populate_form(user_id,userrole_id,employeeID,username,first_name,last_name,email){
+    user_id_backup = user_id
+    userrole_id_backup = userrole_id
+    $('#employeeID').val(employeeID)
+    $('#username').val(username)
+    $('#first_name').val(first_name)
+    $('#last_name').val(last_name)
+    $('#email').val(email)
+    $('#select_user_role_input_box').val(userrole_id)
+}
+function create_role_selector_options_input_box(role_id,role_name){
+    $('#select_user_role_input_box').append(
+        `
+        <option value="${role_id}">${role_name}</option>
+        `
+    )
+}
+$('body').on('click','#save_button',function(){
+    var username = $('#username').val()
+    var first_name = $('#first_name').val()
+    var last_name = $('#last_name').val()
+    var email = $('#email').val()
+    var selected_role = $('#select_user_role_input_box').val()
+    var data = {
+        user_id : user_id_backup,
+        userrole_id : userrole_id_backup,
+        username:username,
+        first_name:first_name,
+        last_name:last_name,
+        email:email,
+        select_user_role_input_box:selected_role,
+    }
+    validate(data)
+})
+function validate(data){
+    if(username == "" || first_name == "" || last_name == "" || email == "" || select_user_role_input_box=='-1'){
+        Swal.fire({
+            icon: "error",
+            title: "Error...",
+            text: 'Input Fields can nor be empty',
+          });
+    }
+    else{
+        send_data_update(data)
+    }
+}
+function send_data_update(data){
+    console.log("Send Data to update user")
+    console.log(data)
+
+    fetch(
+        update_user_details_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if(data.status==200){
+            //reset update form 
+            reset_update_form()
+            //reset table before updating table
+            $('#table_data').empty()
+            //update user table
+            get_user_profile()
+            get_all_deleted_users()
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "User data changed!",
+                showConfirmButton: false,
+                timer: 1500
+              });
+        }
+        else{
+            Swal.fire({
+                icon: "error",
+                title: "Error...",
+                text: data.error,
+              });
+        }
+    })
+}
+function reset_update_form(){
+    user_id_backup = -1
+    userrole_id_backup = -1
+    $('#employeeID').val("")
+    $('#username').val("")
+    $('#first_name').val("")
+    $('#last_name').val("")
+    $('#email').val("")
+    $('#select_user_role_input_box').val("-1")
+}
+//UPDATE USER DATA LOGIC ENDS
 function delete_user(user_id){
     data = {
         user_id:user_id
@@ -293,6 +396,7 @@ function delete_user(user_id){
         }
     })
 }
+//POPULATING ROLE DROPDOWN LIST STARTS
 function get_role_list(){
     fetch(
         get_all_roles_list,{
@@ -319,9 +423,16 @@ function get_role_list(){
                 <option value = "-1" selected>--Select User Role--</option>
                 `
             )
+            $('#select_user_role_input_box').empty()
+            $('#select_user_role_input_box').append(
+                `
+                <option value = "-1" selected>--Select User Role--</option>
+                `
+            )
             for(var i=0;i<data.context.length;i++){
                 create_role_selector_options(data.context[i].id,data.context[i].roles)
                 create_role_selector_options_recycle_bin(data.context[i].id,data.context[i].roles)
+                create_role_selector_options_input_box(data.context[i].id,data.context[i].roles)
             }
         }
         else{
@@ -329,6 +440,7 @@ function get_role_list(){
         }
     })
 }
+//POPULATING ROLE DROPDOWN LIST ENDS
 //role selector near user table
 function create_role_selector_options(role_id,role_name){
     $('#select_user_role_user_table').append(
@@ -375,6 +487,12 @@ function get_values_role_selector(){
         }
     })
 }
+
+
+
+
+
+
 
 // recycle bin related functions
 function get_all_deleted_users(){
@@ -527,7 +645,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div itable_data_deletedd="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>

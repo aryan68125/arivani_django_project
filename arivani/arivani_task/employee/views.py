@@ -3,11 +3,14 @@ from employee.models import *
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
+from auth_user.models import *
 # OLD CODE STARTS
 def employeePage(request):
     if request.user.is_authenticated:
         logged_in_user=request.user.id
         user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method == 'GET':  # Corrected method check
             employees = Employee.objects.all().filter(is_deleted=0,created_by=logged_in_user)
             employees_deleted = Employee.objects.all().filter(is_deleted=1,created_by=logged_in_user).count()
@@ -22,6 +25,7 @@ def employeePage(request):
                 data = {
                 'employees': employees,
                 'employees_deleted':employees_deleted,
+                'user_role':user_role
                 }
             return render(request, 'Employee/employee.html', data)
     else:
@@ -66,13 +70,15 @@ def update_data_page(request,pk):
         if request.method == 'GET':  # Corrected method check
             logg_in_user = request.user.id
             user = User.objects.get(id=logg_in_user)
+            assigned_user_role = AssignedUserRoles.objects.get(user=user)
+            user_role = assigned_user_role.user_role
             try:
                 employee = Employee.objects.get(id=pk)
                 employees = Employee.objects.all().filter(is_deleted=0,created_by=user)
                 # save id for later use
                 ID.clear()
                 ID['id']=pk
-                return render(request,'Employee/employee.html',{'data':employee,'update':1,'employees':employees})
+                return render(request,'Employee/employee.html',{'data':employee,'update':1,'employees':employees,'user_role':user_role})
             except Employee.DoesNotExist:
                 return render(request,'Employee/employee.html',{'error':'Employee Does not Exist'})
     else:
@@ -133,12 +139,16 @@ def delete_data(request,pk):
 def recycleBinPage(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
+        user = User.objects.get(id = logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method=='GET':
             title = 'emp'
             emp = Employee.objects.all().filter(is_deleted=1,created_by=logged_in_user)
             data={
                 'title':title,
-                'employees':emp
+                'employees':emp,
+                'user_role':user_role
             }
             return render(request,'recycle_bin/recycle_bin.html',data)
         else:

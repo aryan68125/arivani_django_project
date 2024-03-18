@@ -14,6 +14,7 @@
     var get_all_roles_list = '{% url "get_all_roles_list" %}'
     var get_role_from_front_deleted_users_url = '{% url "get_role_from_front_deleted_users" %}'
     var get_role_from_front_users_url = '{% url "get_role_from_front_users" %}'
+    var update_user_details_url = '{% url "update_user_details" %}'
   </script>
   <div class="row ms-3">
     <h3>Employee User List</h3>
@@ -100,14 +101,32 @@
                 <div class="accordion-body">
                     <!--Using Django template to send data to the backend-->
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <label class="visually-hidden" for="employeeID">Employee ID</label>
-                                    <input type="text" class="form-control" id="employeeID" name="employeeID" value="{{data.employeeID}}">
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <label class="visually-hidden" for="employeeID">Employee ID</label>
+                              <input type="text" class="form-control" id="employeeID" name="employeeID" placeholder="UserID">
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-12">
-                                    <label class="visually-hidden" for="name">Name</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{data.name}}">
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <label class="visually-hidden" for="name">Name</label>
+                              <input type="text" class="form-control" id="username" name="username" placeholder="Username">
                             </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <label class="visually-hidden" for="name">Name</label>
+                              <input type="text" class="form-control" id="first_name" name="username" placeholder="First Name">
+                            </div> 
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <label class="visually-hidden" for="name">Name</label>
+                              <input type="text" class="form-control" id="last_name" name="username" placeholder="Last Name">
+                            </div> 
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <label class="visually-hidden" for="name">Name</label>
+                              <input type="text" class="form-control" id="email" name="username" placeholder="Email">
+                            </div> 
+                            <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                              <select class="form-select" aria-label="Default select example" id="select_user_role_input_box">
+                                <option value = "-1" selected>--Select User Role--</option>
+                              </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12"></div>
                         </div>
                         <div class="row mt-3">
                             <div class="row mb-3">

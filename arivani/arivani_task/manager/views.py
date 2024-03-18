@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from manager.models import *
 
 from django.contrib import messages
-
+from auth_user.models import *
 #GET hr's from hr table
 from hr_app.models import *
 from django.shortcuts import get_object_or_404
@@ -14,6 +14,8 @@ def ManagerPage(request):
     if request.user.is_authenticated:
         logged_in_user=request.user.id
         user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method == 'GET':  # Corrected method check
             manager = ManagerModel.objects.all().filter(is_deleted=0,created_by=logged_in_user)
             manager_deleted = ManagerModel.objects.all().filter(is_deleted=1,created_by=logged_in_user).count()
@@ -35,7 +37,7 @@ def ManagerPage(request):
                 'hr_list':hr_list,
                 'hr_under_manager_count':hr_under_manager_count,
                 'hr_list_under_manager':hr_list_under_manager,
-                'is_superuser':1
+                'is_superuser':1,
                 }
             else:
                 data = {
@@ -43,7 +45,8 @@ def ManagerPage(request):
                 'manager_deleted':manager_deleted,
                 'hr_list':hr_list,
                 'hr_under_manager_count':hr_under_manager_count,
-                'hr_list_under_manager':hr_list_under_manager
+                'hr_list_under_manager':hr_list_under_manager,
+                'user_role':user_role,
                 }
             return render(request, 'manager/manager.html', data)
     else:
@@ -95,6 +98,8 @@ def update_data_page(request,pk):
         if request.method == 'GET':  # Corrected method check
             logg_in_user = request.user.id
             user = User.objects.get(id=logg_in_user)
+            assigned_user_role = AssignedUserRoles.objects.get(user=user)
+            user_role = assigned_user_role.user_role
             try:
                 manager = ManagerModel.objects.get(id=pk)
                 managers = ManagerModel.objects.all().filter(is_deleted=0,created_by=user)
@@ -119,7 +124,7 @@ def update_data_page(request,pk):
                 ID.clear()
                 ID['id']=pk
                 print(f"ID saved = {ID['id']}")
-                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers,'hr_list':hr_list, 'hr_under_manager_count':hr_under_manager_count,'hr_list_under_manager':hr_list_under_manager, 'hr_not_under_manager':hr_not_under_manager})
+                return render(request,'manager/manager.html',{'data':manager,'update':1,'managers':managers,'hr_list':hr_list, 'hr_under_manager_count':hr_under_manager_count,'hr_list_under_manager':hr_list_under_manager, 'hr_not_under_manager':hr_not_under_manager,'user_role':user_role})
             except ManagerModel.DoesNotExist:
                 return render(request,'manager/manager.html',{'error':'Manager Does not Exist'})
     else:
@@ -192,12 +197,16 @@ def delete_data(request,pk):
 def recycleBinPage(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method=='GET':
             title = 'manager'
             manager = ManagerModel.objects.all().filter(is_deleted=1,created_by=logged_in_user)
             data={
                 'title':title,
-                'managers':manager
+                'managers':manager,
+                'user_role':user_role
             }
             return render(request,'recycle_bin/recycle_bin.html',data)
         else:
@@ -234,13 +243,18 @@ def restoreData_emp(request,pk):
 delete_data_perma = {}
 def deleteDataPermanentlyPage(request,pk):
     if request.user.is_authenticated:
+        logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method=='GET':
             delete_data_perma.clear()
             delete_data_perma['id'] = pk
             print(f"permanent delete id : {delete_data_perma['id']}")
             title = "manager"
             data = {
-                'title':title
+                'title':title,
+                'user_role':user_role
             }
             return render(request,'recycle_bin/delete_permanent.html',data)
         else:
@@ -286,6 +300,9 @@ def deleteDataPermanently(request):
 hr_under_manager_id_detail = {}
 def hr_under_manager_details_page(request,manager_pk,hr_pk):
     if request.user.is_authenticated:
+        user = User.objects.get(id=logged_in_user)
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
         if request.method=='GET':
             manager_id = manager_pk
             hr_id = hr_pk
@@ -297,6 +314,7 @@ def hr_under_manager_details_page(request,manager_pk,hr_pk):
                 context = {
                     'manager' : manager,
                     'hr' : hr,
+                    'user_role':user_role
                 }
                 return render(request,'manager/hr_under_manager_detail_page.html',context)
             except ManagerModel.DoesNotExist:

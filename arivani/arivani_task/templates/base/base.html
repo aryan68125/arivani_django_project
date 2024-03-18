@@ -48,27 +48,63 @@
                 <a href="{% url 'createUserPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Register User</a>
               </li>
               <li href="#" class="nav-link" id = "Home">
-                <a href="{% url 'employee_user_list_Page' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Employee User</a>
+                <a href="{% url 'employee_user_list_Page' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">User Accounts</a>
               </li>
-              <li href="#" class="nav-link" id = "Home">
-                <a href="{% url 'createUserPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Hr User</a>
-              </li>
-              <li href="#" class="nav-link" id = "Home">
-                <a href="{% url 'createUserPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager User</a>
-              </li>
-
+              
 
               <li href="#" class="nav-link" id = "Home">
                 <a href="{% url 'dashboardPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Home</a>
               </li>
               <li href="#" class="nav-link" id = "Employee">
-                <a href="{% url 'employeePage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Employee Data</a>
+                <a href="{% url 'employeePage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Employee</a>
               </li>
               <li href="#" class="nav-link" id = "Hr_Manager">
-                <a href= "{% url 'hr_home' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Hr Data</a>
+                <a href= "{% url 'hr_home' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Hr</a>
               </li>
               <li href="#" class="nav-link" id = "Hr_Manager">
-                <a href= "{% url 'ManagerPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager Data</a>
+                <a href= "{% url 'ManagerPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager</a>
+              </li>
+              <li href="#" class="nav-link" id = "logoutUser">
+                <a href= "{% url 'logoutUser' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Logout</a>
+              </li>
+              <li href="#" class="nav-link" id = "ChangePassword">
+                <a href= "{% url 'ChangePasswordPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Change Pass</a>
+              </li>
+              {% endif %}
+              {% if user_role == '1' %}
+              <li href="#" class="nav-link" id = "Home">
+                <a href="{% url 'dashboardPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Home</a>
+              </li>
+              <li href="#" class="nav-link" id = "Employee">
+                <a href="{% url 'employeePage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Employee</a>
+              </li>
+              <li href="#" class="nav-link" id = "logoutUser">
+                <a href= "{% url 'logoutUser' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Logout</a>
+              </li>
+              <li href="#" class="nav-link" id = "ChangePassword">
+                <a href= "{% url 'ChangePasswordPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Change Pass</a>
+              </li>
+              {% endif %}
+              {% if user_role == '2' %}
+              <li href="#" class="nav-link" id = "Home">
+                <a href="{% url 'dashboardPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Home</a>
+              </li>
+              <li href="#" class="nav-link" id = "Employee">
+                <a href="{% url 'hr_home' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Hr</a>
+              </li>
+              <li href="#" class="nav-link" id = "logoutUser">
+                <a href= "{% url 'logoutUser' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Logout</a>
+              </li>
+              <li href="#" class="nav-link" id = "ChangePassword">
+                <a href= "{% url 'ChangePasswordPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Change Pass</a>
+              </li>
+              {% endif %}
+              {% if user_role == '3' %}
+              <li href="#" class="nav-link" id = "Home">
+                <a href="{% url 'dashboardPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Home</a>
+              </li>
+              <li href="#" class="nav-link" id = "Employee">
+                <a href="{% url 'ManagerPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager</a>
               </li>
               <li href="#" class="nav-link" id = "logoutUser">
                 <a href= "{% url 'logoutUser' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Logout</a>

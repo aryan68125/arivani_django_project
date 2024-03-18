@@ -17,4 +17,5 @@ urlpatterns = [
     path('get_all_roles_list/',get_all_roles_list,name="get_all_roles_list"),
     path('get_role_from_front_deleted_users/',get_role_from_front_deleted_users,name="get_role_from_front_deleted_users"),
     path('get_role_from_front_users/',get_role_from_front_users,name="get_role_from_front_users"),
+    path('update_user_details/',update_user_details,name="update_user_details"),
 ]
