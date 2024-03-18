@@ -1,0 +1,162 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/employee/employee.css' %}" rel="stylesheet"/>
+<div class="container">
+  <script>
+    var get_user_accounts_data_url = '{% url "get_user_accounts_data" %}'
+    var change_user_status_url = '{% url "change_user_status" %}'
+    var delete_user_accounts_url = '{% url "delete_user_accounts" %}'
+    var get_all_deleted_users_url = '{% url "get_all_deleted_users" %}'
+    var get_deleted_users_counts_url = '{% url "get_deleted_users_counts" %}'
+    var restore_user_url = '{% url "restore_user" %}'
+    var get_all_roles_list = '{% url "get_all_roles_list" %}'
+    var get_role_from_front_deleted_users_url = '{% url "get_role_from_front_deleted_users" %}'
+    var get_role_from_front_users_url = '{% url "get_role_from_front_users" %}'
+  </script>
+  <div class="row ms-3">
+    <h3>Employee User List</h3>
+  </div>
+  <!--Recycle Page Employee Management-->
+  <div class="card">
+    <div class="card-body" style="background:#CFE2FF;">
+      <div class="row">
+        <div class="col-sm-3 ">
+          <div class="row">
+            <div class="col-sm-2 ">
+              <span class="fs-3"  style="font-weight:bolder;"><i class="fa-solid fa-recycle"></i></span>
+            </div>
+            <div class="col-sm-10 ">
+              <h4>Recycle Bin</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4 ">
+          
+        </div>
+        <div class="col-sm-5">
+          <div class="row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-2">
+                <button class="btn btn-secondary " id="recycle_bin_button" style="background:#c4c1e0" type="submit" aria-expanded="false">
+                  ...
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="recycle_bin_table">
+    <div class="card-body">
+        <div class="row">
+          <div class="col-sm-4">
+            <select class="form-select" aria-label="Default select example" id="select_user_role_recycle_bin">
+              <option value = "-1" selected>--Select User Role--</option>
+            </select>
+          </div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-4"></div>
+        </div>
+        <div class="table-responsive scrollable-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col" style="display:none">user_id</th>
+                  <th scope="col" style="display:none">user_role_id</th>
+                  <th scope="col">Action</th>
+                  <th scope="col">Employee ID</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email Address</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Is Deleted</th>
+                  <th scope="col">Date Joined</th>
+                </tr>
+              </thead>
+              <tbody id="table_data_deleted">
+                  
+              </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+  <!--Recycle Page Employee Management-->
+
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Update Employee
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <!--Using Django template to send data to the backend-->
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="employeeID">Employee ID</label>
+                                    <input type="text" class="form-control" id="employeeID" name="employeeID" value="{{data.employeeID}}">
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                    <label class="visually-hidden" for="name">Name</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{data.name}}">
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="row mb-3">
+                                <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%" type="submit">Save Changes</button>
+                            </div>
+                        </div>
+                    <!--Using Django template to send data to the backend-->
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+          <div class="row">
+            <div class="col-sm-4">
+              <select class="form-select" aria-label="Default select example" id="select_user_role_user_table">
+                <option value = "-1" selected>--Select User Role--</option>
+              </select>
+            </div>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4"></div>
+          </div>
+        </div>
+        <div class="table-responsive scrollable-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col" style="display:none">user_id</th>
+                <th scope="col" style="display:none">user_role_id</th>
+                <th scope="col">Action</th>
+                <th scope="col">Employee ID</th>
+                <th scope="col">Username</th>
+                <th scope="col">First Name</th>
+                <th scope="col">Last Name</th>
+                <th scope="col">Email Address</th>
+                <th scope="col">Role</th>
+                <th scope="col">Status</th>
+                <th scope="col">Is Deleted</th>
+                <th scope="col">Date Joined</th>
+              </tr>
+            </thead>
+            <tbody id="table_data">
+                
+            </tbody>
+          </table>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/sudo_app/employee_user.js' %}"></script>
+{% endblock content %}

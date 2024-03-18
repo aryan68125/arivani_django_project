@@ -3,7 +3,7 @@ from employee.models import *
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib.auth.models import User
-# Create your views here.
+# OLD CODE STARTS
 def employeePage(request):
     if request.user.is_authenticated:
         logged_in_user=request.user.id
@@ -213,3 +213,4 @@ def deleteDataPermanently(request):
     else:
         return redirect("loginUserPage")
 # Recycle bin functionality ends
+# OLD CODE ENDS

@@ -5,12 +5,12 @@
 <div class="container">
     
     <div class=" row ms-3">
-      <h3>Register User</h3>
+      <h3>Register User </h3>
   </div>
     <!--old register page html code START-->
     <script>
-        {% comment %} var registerUser = "{% url 'registerUser' %}" {% endcomment %}
-        {% comment %} var registerVerifyOtpPage="{% url 'registerVerifyOtpPage' %}" {% endcomment %}
+        var registerUser = "{% url 'registerUser' %}"
+        var registerVerifyOtpPage="{% url 'registerVerifyOtpPage' %}"
     </script>
     <div class="container mt-5" id="add_user_box">
         <div class="mx-auto mt-5" style="width:60%;">
@@ -60,11 +60,15 @@
                   </div>
 
                   <div class="row mb-3 mx-2">
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <select class="form-select" aria-label="Default select example" id="role_select">
+                      <option value="-1">--SELECT ROLE--</option>
+                      {% if roles %}
+                      {% for role in roles %}
+                        <option value="{{ role.id }}">{{ role.roles }}</option>
+                      {% endfor %}
+                      {% else %}
+                      <option value="-1">--SELECT ROLE--</option>
+                      {% endif %}
                       </select>
                   </div>
     
@@ -75,7 +79,7 @@
               </div>
         </div>
     </div>
-    <script src="{% static 'js/auth_user/register_page.js' %}"></script>
+    <script src="{% static 'js/sudo_app/register_user.js' %}"></script>
     <!--old register page html code END-->
     
 </div>
