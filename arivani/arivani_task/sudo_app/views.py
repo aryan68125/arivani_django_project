@@ -259,7 +259,7 @@ def employee_user_list_Page(request):
             data = {
                 'is_superuser':1,
             }
-            return render(request,'sudo_app/employee_user.html',data)
+            return render(request,'sudo_app/user_CRUD_page.html',data)
         else:
             return redirect("loginUserPage")
     else:
@@ -324,7 +324,7 @@ def change_user_status(request):
             return JsonResponse({'status':500,'error':'you are not authorized to access this link'},status=500)
     else:
         return redirect("loginUserPage")
-# delete user (send user to recycle bin)
+# delete user (send user to recycle bin) SOFT DELETE    
 def delete_user_accounts(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
@@ -425,6 +425,28 @@ def restore_user(request):
             return JsonResponse({'status':400,'error':'You dont have authority to use this link'},status=400)
     else:
         return redirect("loginUserPage")
+# HARD DELETE delete user accounts permanently
+def hard_delete_user_accounts(request):
+    is_ajax = request.headers.get("X-Requested-With")=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            if request.method=='POST':
+                logged_in_user = request.user.id
+                user = User.objects.get(id=logged_in_user)
+                if user.is_superuser:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    user_id = f_data['user_id']
+                    print(f"user to be deleted --> user_id : {user_id}")
+                    user_to_be_deleted = User.objects.get(id = user_id)
+                    user_to_be_deleted.delete()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return JsonResponse({'status':401, 'error':'You dont have authority to use this link'},status=401)
+            else:
+                return JsonResponse({'status':400,'error':"Bad Request"},status=400)
+        else:
+            return redirect("loginUserPage")
 def get_all_roles_list(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
@@ -583,25 +605,28 @@ def update_user_details(request):
                     last_name = f_data['last_name']
                     email = f_data['email']
                     selected_role = f_data['select_user_role_input_box']
-                    #assign values to the user in DB
-                    user = User.objects.get(id=user_id)
-                    user.username = username
-                    user.first_name = first_name
-                    user.last_name = last_name
-                    user.email = email
-                    user.save()
-                    #assigning user role
-                    assigned_user_role = AssignedUserRoles.objects.get(user=user)
-                    assigned_user_role.user_role = selected_role
-                    assigned_user_role.save()
-                    #get all roles
-                    role_list = RoleList.objects.get(id=selected_role)
-                    role_name = role_list.roles
-                    #Regenerate userID (employeeID, hrID, managerID)
-                    user_profile = Employee_profile.objects.get(user=user)
-                    user_profile.employeeID = str(user.id) + role_name
-                    user_profile.save()
-                    return JsonResponse({'status':200},status=200)
+                    try:
+                        #assign values to the user in DB
+                        user = User.objects.get(id=user_id)
+                        user.username = username
+                        user.first_name = first_name
+                        user.last_name = last_name
+                        user.email = email
+                        user.save()
+                        #assigning user role
+                        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+                        assigned_user_role.user_role = selected_role
+                        assigned_user_role.save()
+                        #get all roles
+                        role_list = RoleList.objects.get(id=selected_role)
+                        role_name = role_list.roles
+                        #Regenerate userID (employeeID, hrID, managerID)
+                        user_profile = Employee_profile.objects.get(user=user)
+                        user_profile.employeeID = str(user.id) + role_name
+                        user_profile.save()
+                        return JsonResponse({'status':200},status=200)
+                    except IntegrityError:
+                        return JsonResponse({'status':500,'error':'User already exist'},status=500)
                 else:
                     return JsonResponse({'status':401, 'error':'You dont have authority to use this link'},status=401)
             else:

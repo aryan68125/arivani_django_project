@@ -62,6 +62,9 @@ function create_table(user_profile_data,user_list,i){
     // console.log(user_list.is_active)
     // console.log(user_list.id)
     // console.log(user_profile_data.is_deleted)
+    //trimming date
+    date_joined = user_list.date_joined 
+    var trimmedDate = date_joined.substring(0, 10);
     if(user_list.is_active == true){
         if(user_profile_data.is_deleted==true){
             $('#table_data').append(
@@ -87,7 +90,7 @@ function create_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-check"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -116,7 +119,7 @@ function create_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -147,7 +150,7 @@ function create_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-check"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -176,7 +179,7 @@ function create_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -354,6 +357,7 @@ function reset_update_form(){
     $('#select_user_role_input_box').val("-1")
 }
 //UPDATE USER DATA LOGIC ENDS
+//SOFT DELETE USER (send user to recycle bin)
 function delete_user(user_id){
     data = {
         user_id:user_id
@@ -577,6 +581,9 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
     // console.log(user_list.is_active)
     // console.log(user_list.id)
     // console.log(user_profile_data.is_deleted)
+    //trimming date
+    date_joined = user_list.date_joined 
+    var trimmedDate = date_joined.substring(0, 10);
     if(user_list.is_active == true){
         if(user_profile_data.is_deleted==true){
             $('#table_data_deleted').append(
@@ -602,7 +609,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-check"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -631,7 +638,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -662,7 +669,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-check"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -674,7 +681,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div class="row" id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -691,7 +698,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                             <i class="fa-solid fa-xmark"></i>
                         </button>
                     </td>
-                    <td>${user_list.date_joined}</td>
+                    <td>${trimmedDate}</td>
                 </tr>
                 `
             )
@@ -701,7 +708,12 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
 function action(element_id,user_id,userrole_id){
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
+    <div class="col-lg-6 col-md-6 col-sm-12">
     <button class="btn btn-primary" onclick="restore_user('${user_id}')"><i class="fa-solid fa-trash-can-arrow-up"></i></button>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+    <button class="btn btn-danger" onclick="delete_user_permanently('${user_id}')"><i class="fa-solid fa-trash"></i></button>
+    </div>
     `)
 }
 function restore_user(user_id){
@@ -787,6 +799,57 @@ function get_values_role_selector_recycle_bin(){
         }
         else{
             
+        }
+    })
+}
+//HARD DELETE USER (delete user account permanently)
+function delete_user_permanently(user_id){
+    var data={
+        user_id:user_id,
+    }
+    fetch(
+        hard_delete_user_accounts_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken"),
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if (data.status==200){
+            Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#d33",
+              cancelButtonColor: "#3085d6",
+              confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+              if (result.isConfirmed) {
+                //update user table
+                get_user_profile()
+                get_all_deleted_users()
+                get_deleted_user_count()
+                $('#select_user_role_recycle_bin').val('-1')
+                $('#select_user_role_user_table').val('-1')
+                Swal.fire({
+                  title: "Deleted!",
+                  text: "User Deleted Permanently!",
+                  icon: "success"
+                });
+              }
+            });            
+        }
+        else{
+            Swal.fire({
+                icon: "error",
+                title: "Error...",
+                text: data.error,
+              });
         }
     })
 }

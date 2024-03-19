@@ -15,9 +15,10 @@
     var get_role_from_front_deleted_users_url = '{% url "get_role_from_front_deleted_users" %}'
     var get_role_from_front_users_url = '{% url "get_role_from_front_users" %}'
     var update_user_details_url = '{% url "update_user_details" %}'
+    var hard_delete_user_accounts_url = '{% url "hard_delete_user_accounts" %}'
   </script>
   <div class="row ms-3">
-    <h3>Employee User List</h3>
+    <h3>User List</h3>
   </div>
   <!--Recycle Page Employee Management-->
   <div class="card">
@@ -69,7 +70,7 @@
                   <th scope="col" style="display:none">user_id</th>
                   <th scope="col" style="display:none">user_role_id</th>
                   <th scope="col">Action</th>
-                  <th scope="col">Employee ID</th>
+                  <th scope="col">User ID</th>
                   <th scope="col">Username</th>
                   <th scope="col">First Name</th>
                   <th scope="col">Last Name</th>
@@ -94,7 +95,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Update Employee
+                  Update User Data
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -159,7 +160,7 @@
                 <th scope="col" style="display:none">user_id</th>
                 <th scope="col" style="display:none">user_role_id</th>
                 <th scope="col">Action</th>
-                <th scope="col">Employee ID</th>
+                <th scope="col">User ID</th>
                 <th scope="col">Username</th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
