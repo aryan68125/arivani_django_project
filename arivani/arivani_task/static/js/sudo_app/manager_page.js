@@ -460,6 +460,8 @@ function collect_selected_manager_and_hr(){
                     showConfirmButton: false,
                     timer: 1500
                   });
+                  saved_selected_hr = []
+                  saved_selected_manager = []
             }
             else{
                 Swal.fire({

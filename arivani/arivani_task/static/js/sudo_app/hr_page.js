@@ -457,6 +457,8 @@ function collect_selected_hr_and_employees(){
                     showConfirmButton: false,
                     timer: 1500
                   });
+                  saved_selected_Hr = []
+                  saved_selected_employee = []
             }
             else{
                 Swal.fire({
