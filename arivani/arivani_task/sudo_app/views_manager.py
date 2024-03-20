@@ -62,7 +62,7 @@ def get_all_hr(request):
                         if user['id'] != admin:
                             user_role_list = {}
                             get_user_role = AssignedUserRoles.objects.get(user=user['id'])
-                            if get_user_role.user_role == '1':
+                            if get_user_role.user_role == '2': # hr
                                 role_list = RoleList.objects.get(id=get_user_role.user_role)
                                 employee_profile_id = Employee_profile.objects.get(user=user['id']) 
                                 user_role_list['user_role'] = get_user_role.user_role #role id
@@ -97,7 +97,7 @@ def get_all_manager(request):
                         if user['id'] != admin:
                             user_role_list = {}
                             get_user_role = AssignedUserRoles.objects.get(user=user['id'])
-                            if get_user_role.user_role == '2':
+                            if get_user_role.user_role == '3': # manager
                                 role_list = RoleList.objects.get(id=get_user_role.user_role)
                                 employee_profile_id = Employee_profile.objects.get(user=user['id']) 
                                 user_role_list['user_role'] = get_user_role.user_role #role id
@@ -118,7 +118,7 @@ def get_all_manager(request):
             return redirect("loginUserPage")
 # GET ALL DATA ENDS
 
-# ASSIGN SUBORDINATES TO THE USER (HR) STARTS
+# ASSIGN SUBORDINATES TO THE USER (MANAGER) STARTS
 def assign_subordinates(request):
     is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
     if is_ajax:
@@ -129,24 +129,24 @@ def assign_subordinates(request):
                 if request.method=='POST':
                     data = json.load(request)
                     f_data = data.get('payload')
-                    employee_id_list = f_data['saved_selected_employee']
-                    hr_id_list = f_data['saved_selected_Hr']
-                    hr_id = hr_id_list[0]
-                    print(f"employeeID  = {employee_id_list} hr_id : {hr_id}")
+                    hr_id_list = f_data['saved_selected_hr']
+                    manager_id_list = f_data['saved_selected_manager']
+                    manager_id = manager_id_list[0]
+                    print(f"hrID  = {hr_id_list} manager_id : {manager_id}")
 
                     # user whoes role is hr
-                    user_hr = User.objects.get(id=hr_id) 
-                    user_profile_hr = Employee_profile.objects.get(user=user_hr)
+                    user_manager = User.objects.get(id=manager_id) 
+                    user_profile_manager = Employee_profile.objects.get(user=user_manager)
                     
 
-                    user_profile_hr.assigned_subordinate.clear()  
+                    user_profile_manager.assigned_subordinate.clear()  
                     # Add selected Hr_model instances to the manager
-                    for employee_id in employee_id_list:
+                    for hr_id in hr_id_list:
                         #user whoes role is employee
-                        user_employee = User.objects.get(id=employee_id)
-                        user_profile_employee = Employee_profile.objects.get(user=user_employee)
-                        user_profile_hr.assigned_subordinate.add(user_employee)
-                    user_profile_hr.save()
+                        user_hr = User.objects.get(id=hr_id)
+                        user_profile_hr = Employee_profile.objects.get(user=user_hr)
+                        user_profile_manager.assigned_subordinate.add(user_hr)
+                    user_profile_manager.save()
                     return JsonResponse({'status':200},status=200)
                 else:
                     return JsonResponse({'status':400,'error':'Bad Request'},status=400)
@@ -154,4 +154,43 @@ def assign_subordinates(request):
                 return redirect("loginUserPage")
         else:
             return redirect("loginUserPage")
-# ASSIGN SUBORDINATES TO THE USER (HR) ENDS
+#get all assign subordinates to manager
+def get_all_assigned_subordinates(request):
+    is_ajax = request.headers.get("X-Requested-With")=="XMLHttpRequest"
+    if is_ajax:
+        if request.user.is_authenticated:
+            logged_in_user = request.user.id
+            user = User.objects.get(id=logged_in_user)
+            if user.is_superuser:
+                if request.method=='POST':
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    managerID = f_data['managerID']
+                    manager_pk = int(re.search(r'\d+', managerID).group())
+                    users = User.objects.all().filter(pk=manager_pk).values()
+                    user_manager_list = []
+                    for user in users:
+                        admin = 1
+                        if user['id'] != admin:
+                            user_role_list = {}
+                            get_user_role = AssignedUserRoles.objects.get(user=user['id'])
+                            if get_user_role.user_role == '3': # manager
+                                role_list = RoleList.objects.get(id=get_user_role.user_role)
+                                employee_profile_id = Employee_profile.objects.get(user=user['id']) 
+                                user_role_list['user_role'] = get_user_role.user_role #role id
+                                user_role_list['user_role_name'] = role_list.roles #role name
+                                user_role_list['employeeID'] = employee_profile_id.employeeID
+                                user_role_list['is_deleted'] = employee_profile_id.is_deleted
+                                user_role_list['user'] = user
+                                #get all subbordinates assigned to the manager
+                                subordinates = list(employee_profile_id.assigned_subordinate.all().values())
+                                user_role_list['subordinates'] = subordinates
+                                user_manager_list.append(user_role_list)
+                    return JsonResponse({'status':200,'context':user_manager_list},status=200)
+                else:
+                    return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+            else:
+                return redirect("loginUserPage")
+        else:
+            return redirect("loginUserPage")
+# ASSIGN SUBORDINATES TO THE USER (MANAGER) ENDS

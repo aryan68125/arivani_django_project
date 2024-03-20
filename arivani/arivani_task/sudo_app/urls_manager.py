@@ -8,4 +8,8 @@ from sudo_app.views_manager import *
 # ]
 urlpatterns = [
     path('manager_page/',manager_page,name="manager_page"),
+    path('get_all_hr/',get_all_hr,name="get_all_hr_manager_views"),
+    path('get_all_manager/',get_all_manager,name="get_all_manager_manager_views"),
+    path('assign_subordinates/',assign_subordinates,name="assign_subordinates_manager_views"),
+    path('get_all_assigned_subordinates/',get_all_assigned_subordinates,name="get_all_assigned_subordinates_manager"),
 ]

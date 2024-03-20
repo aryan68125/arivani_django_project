@@ -807,50 +807,50 @@ function delete_user_permanently(user_id){
     var data={
         user_id:user_id,
     }
-    fetch(
-        hard_delete_user_accounts_url,{
-            method:'POST',
-            credentials:'same-origin',
-            headers:{
-                'X-Requested-With':'XMLHttpRequest',
-                'X-CSRFToken':getCookie("csrftoken"),
-            },
-            body:JSON.stringify({payload:data})
-        }
-    ).then(response=>response.json())
-    .then(data=>{
-        if (data.status==200){
-            Swal.fire({
-              title: "Are you sure?",
-              text: "You won't be able to revert this!",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#d33",
-              cancelButtonColor: "#3085d6",
-              confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-              if (result.isConfirmed) {
-                //update user table
-                get_user_profile()
-                get_all_deleted_users()
-                get_deleted_user_count()
-                $('#select_user_role_recycle_bin').val('-1')
-                $('#select_user_role_user_table').val('-1')
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          //update user table
+          get_user_profile()
+          get_all_deleted_users()
+          get_deleted_user_count()
+          $('#select_user_role_recycle_bin').val('-1')
+          $('#select_user_role_user_table').val('-1')
+          fetch(
+            hard_delete_user_accounts_url,{
+                method:'POST',
+                credentials:'same-origin',
+                headers:{
+                    'X-Requested-With':'XMLHttpRequest',
+                    'X-CSRFToken':getCookie("csrftoken"),
+                },
+                body:JSON.stringify({payload:data})
+            }
+        ).then(response=>response.json())
+        .then(data=>{
+            if (data.status==200){
                 Swal.fire({
-                  title: "Deleted!",
-                  text: "User Deleted Permanently!",
-                  icon: "success"
-                });
-              }
-            });            
+                    title: "Deleted!",
+                    text: "User Deleted Permanently!",
+                    icon: "success"
+                  });
+            }
+            else{
+                Swal.fire({
+                    icon: "error",
+                    title: "Error...",
+                    text: data.error,
+                  });
+            }
+        })
         }
-        else{
-            Swal.fire({
-                icon: "error",
-                title: "Error...",
-                text: data.error,
-              });
-        }
-    })
+      }); 
 }
 // recycle bin related functions

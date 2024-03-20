@@ -154,4 +154,44 @@ def assign_subordinates(request):
                 return redirect("loginUserPage")
         else:
             return redirect("loginUserPage")
+#get all assign subordinates to hr
+def get_all_assigned_subordinates(request):
+    is_ajax = request.headers.get("X-Requested-With")=="XMLHttpRequest"
+    if is_ajax:
+        if request.user.is_authenticated:
+            logged_in_user = request.user.id
+            user = User.objects.get(id=logged_in_user)
+            if user.is_superuser:
+                if request.method=='POST':
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    hrID = f_data['hrID']
+                    hr_pk = int(re.search(r'\d+', hrID).group())
+                    # print(f"selected hr id : {hr_pk}")
+                    users = User.objects.all().filter(pk=hr_pk).values()
+                    user_employee_list = []
+                    for user in users:
+                        admin = 1
+                        if user['id'] != admin:
+                            user_role_list = {}
+                            get_user_role = AssignedUserRoles.objects.get(user=user['id'])
+                            if get_user_role.user_role == '2': # hr
+                                role_list = RoleList.objects.get(id=get_user_role.user_role)
+                                hr_profile_id = Employee_profile.objects.get(user=user['id']) 
+                                user_role_list['user_role'] = get_user_role.user_role #role id
+                                user_role_list['user_role_name'] = role_list.roles #role name
+                                user_role_list['hrID'] = hr_profile_id.employeeID
+                                user_role_list['is_deleted'] = hr_profile_id.is_deleted
+                                user_role_list['user'] = user
+                                #get all subbordinates assigned to the manager
+                                subordinates = list(hr_profile_id.assigned_subordinate.all().values())
+                                user_role_list['subordinates'] = subordinates
+                                user_employee_list.append(user_role_list)
+                    return JsonResponse({'status':200,'context':user_employee_list},status=200)
+                else:
+                    return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+            else:
+                return redirect("loginUserPage")
+        else:
+            return redirect("loginUserPage")
 # ASSIGN SUBORDINATES TO THE USER (HR) ENDS

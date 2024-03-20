@@ -6,13 +6,15 @@
 <div class="container">
 
   <script>
-     var get_all_employees_url = '{% url "get_all_employees" %}'
-     var get_all_hr_url = '{% url "get_all_hr" %}'
-     var assign_subordinates_url = '{% url "assign_subordinates" %}'
+     var get_all_hr_manager_views_url = '{% url "get_all_hr_manager_views" %}'
+     var get_all_manager_manager_views_url = '{% url "get_all_manager_manager_views" %}'
+     var assign_subordinates_manager_views_url = '{% url "assign_subordinates_manager_views" %}'
+     var get_all_assigned_subordinates_manager_url = '{% url "get_all_assigned_subordinates_manager" %}'
   </script>
 
-<h3>Manager Management Page for Admin</h3>
-
+<div class=" row ms-3">
+  <h3>Manager Management Page for Admin</h3>
+</div>
 <!--Recycle Page Employee Management-->
 <div class="card">
   <div class="card-body" style="background:#CFE2FF;">
@@ -93,20 +95,20 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                                 <label class="visually-hidden" for="managerID">Hr ID</label>
-                                <input type="text" class="form-control" id="managerID" placeholder="HrID">
+                                <input type="text" class="form-control" id="managerID" placeholder="managerID">
                                 <p class ="text-danger" id="hrID_error" style="display:none">hrID field can't be empty</p>
                                 <p class ="text-danger" id="hrID_number_error" style="display:none">hrID should be a number</p>
                                 <p class ="text-danger" id="hrID_positive_number_error" style="display:none">hrID should be a positive number</p>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                                 <label class="visually-hidden" for="name">Name</label>
-                                <input type="text" class="form-control" id="name" placeholder="Name of Hr">
+                                <input type="text" class="form-control" id="name" placeholder="Name of manager">
                                 <p class ="text-danger" id="name_error" style="display:none">name field can't be empty</p>
                         </div>
                     </div>
                     <div class="row my-2">
                       <div class="col-lg-6 col-md-6 col-sm-12">
-                        <select class="form-select my-2"  data-placeholder="Select Employee" multiple="multiple" id="select_employee">
+                        <select class="form-select my-2"  data-placeholder="Select Employee" multiple="multiple" id="select_hr">
                               <option value="">--No Hr--</option>
                         </select>
                       </div>

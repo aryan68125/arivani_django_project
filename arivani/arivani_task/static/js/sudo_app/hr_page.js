@@ -391,6 +391,7 @@ function create_hr_table(user_profile_data,django_contrib_user_model_data,i){
 var saved_selected_Hr = [];
 
 function select_hr_table_row() {
+    $('#select_employee').empty()
     $('#table_data_hr').on('click', 'tr', function() {
         // Get the value of the clicked row
         var hrId = $(this).find('th:nth-child(2)').text().trim();
@@ -402,6 +403,7 @@ function select_hr_table_row() {
             saved_selected_Hr = [];
             $('#hrID').val("");
             $('#name').val("");
+            get_all_subordinates_assigned_to_hr(hrID)
         } else {
             // Remove the green background from previously selected row
             $('#table_data_hr tr.table-primary').removeClass('table-primary');
@@ -415,6 +417,7 @@ function select_hr_table_row() {
     
             var hr_name = $(this).find('td:eq(2)').text().trim();
             $('#name').val(hr_name);
+            get_all_subordinates_assigned_to_hr(hrID)
         }
 
         // console.log(saved_selected_Hr);
@@ -431,7 +434,7 @@ function collect_selected_hr_and_employees(){
         saved_selected_Hr:saved_selected_Hr,
         saved_selected_employee:saved_selected_employee
     }
-    if (saved_selected_Hr.length != 0 && saved_selected_employee.length!=0){
+    if (saved_selected_Hr.length != 0){
         // console.log(data)
         fetch(
             assign_subordinates_url,{
@@ -450,7 +453,7 @@ function collect_selected_hr_and_employees(){
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
-                    title: "User Restored!",
+                    title: "Employees assigned to the hr!",
                     showConfirmButton: false,
                     timer: 1500
                   });
@@ -481,5 +484,69 @@ function reset_update_form(){
     )
     $('#name').val("")
     $('#hrID').val("")
+    get_all_employees_data()
 }
 //GET USER ID AND SUBORDINATE ID AND SEND IT TO THE BACKEND ENDS------>******
+
+function get_all_subordinates_assigned_to_hr(hrID){
+    var data = {
+        hrID : hrID
+    }
+    fetch(
+        get_all_assigned_subordinates_url,{
+            method:'POST',
+            credentials:'same-origin',
+            headers:{
+                'X-Requested-With':'XMLHttpRequest',
+                'X-CSRFToken':getCookie("csrftoken")
+            },
+            body:JSON.stringify({payload:data})
+        }
+    ).then(response=>response.json())
+    .then(data=>{
+        if(data.status==200){
+            // console.log(data)
+            // console.log(data.context)
+            // console.log(data.context[0])
+            //subordinates assigned to the manager
+            // console.log(data.context[0].subordinates)
+            //subordinate id
+            // console.log(data.context[0].subordinates[0].id)
+            $('#select_employee').empty()
+            var options =[];
+            var rowCount = $('#table_data_employee tr').length;
+            for (var j = 0; j < rowCount; j++) {
+                var table_employee_id = $('#table_data_employee tr:eq(' + j + ') th:nth-child(2)').text().trim();
+                var row = $('#table_data_employee tr:eq(' + j + ')');
+                var found = false;
+                for(var i = 0; i < data.context[0].subordinates.length; i++){
+                    if(data.context[0].subordinates[i].id == table_employee_id){
+                        found = true;
+                        var id = data.context[0].subordinates[i].id
+                        var option = id.toString() + " " + data.context[0].subordinates[i].first_name + " " + data.context[0].subordinates[i].last_name
+                        options.push(option)
+                        break;
+                    }
+                }
+
+                if(found){
+                    row.addClass('table-primary');
+                } else {
+                    row.removeClass('table-primary');
+                }
+            }
+            for(var k = 0 ; k<options.length;k++){
+                $('#select_employee').append(
+                    `
+                    <option value="">${options[k]}</option>
+                    `
+                )
+            }
+        }
+        else{
+
+        }
+    })
+}
+//get all subordinates assigned to the manager STARTS
+// get subordinate under hr ENDS
