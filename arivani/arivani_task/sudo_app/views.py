@@ -129,10 +129,12 @@ def registerUser(request):
 
                                     #generate IDs based on roles employeeID, hrID, managerID
                                     #set user's is_deleted to false by default
+                                    current_logged_in_user_instance = User.objects.get(id=logged_in_user)
                                     Employee_profile.objects.create(
                                         user = user,
                                         employeeID = str(user.id) + role_db.roles,
-                                        is_deleted = False
+                                        is_deleted = False,
+                                        created_by = current_logged_in_user_instance,
                                     )
 
                                     # save user email and username for later use

@@ -11,6 +11,73 @@
   <div class=" row ms-3">
     <h3>Management Page for {{role_name}} ({{name}})</h3>
   </div>
+
+<!--Recycle Page Employee Management-->
+<div class="card">
+  <div class="card-body" style="background:#CFE2FF;">
+    <div class="row">
+      <div class="col-sm-3 ">
+        <div class="row">
+          <div class="col-sm-2 ">
+            <span class="fs-3"  style="font-weight:bolder;"><i class="fa-solid fa-recycle"></i></span>
+          </div>
+          <div class="col-sm-10 ">
+            <h4>Recycle Bin</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 ">
+        
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-2">
+            {% comment %} <form action="{% url 'recycle_bin_hr' %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-secondary " style="background:#c4c1e0" type="submit" aria-expanded="false">
+                ...
+              </button>
+            </form> {% endcomment %}
+            <button id="recycle_bin_btn" class="btn btn-secondary " style="background:#c4c1e0" type="button" aria-expanded="false">
+              ...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="recyclebin_data_card">
+  <div class="card-body">
+    <div class="table-responsive scrollable-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" style="display:none">user_id</th>
+              <th scope="col" style="display:none">user_role_id</th>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Username</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email Address</th>
+              <th scope="col">Role</th>
+              <th scope="col">Status</th>
+              <th scope="col">Is Deleted</th>
+              <th scope="col">Date Joined</th>
+            </tr>
+          </thead>
+          <tbody id="recycle_bin_table_employee">
+              
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<!--Recycle Page Employee Management-->
     <div class="row mt-5">
         <div class="accordion" id="accordionExample">
             <div class="accordion-item">
@@ -82,5 +149,5 @@
         </div>
     </div>
 </div>
-<script src="{% static 'js/hr_app/hr_app_home2.js' %}"></script>
+<script src="{% static 'js/hr_app/hr_app_update_employee.js' %}"></script>
 {% endblock content %}

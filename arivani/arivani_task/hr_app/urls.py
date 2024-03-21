@@ -22,5 +22,11 @@ from hr_app.views2 import *
 # ]
 
 urlpatterns = [
-    path('hr_home/',dashboard_home,name="hr_home"),
+    path('hr_home/',hr_home,name="hr_home"),
+    path('hr_add_employee_Page/',hr_add_employee_Page,name="hr_add_employee_Page_hr_app"),
+    path('hr_app_update_employee_Page/',hr_app_update_employee_Page,name="hr_app_update_employee_Page_hr_app"),
+    path('register_employee_hr/',register_employee_hr,name="register_employee_hr_app"),
+    path('registerVerifyOtpPage_hr/',registerVerifyOtpPage_hr,name="registerVerifyOtpPage_hr_app"),
+    path('resendOtp_hr/',resendOtp_hr,name="resendOtp_hr_app"),
+    path('verifyOtpRegisterUser_hr/',verifyOtpRegisterUser_hr,name="verifyOtpRegisterUser_hr_app"),
 ]

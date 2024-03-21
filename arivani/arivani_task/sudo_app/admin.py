@@ -6,7 +6,7 @@ class RoleListModelAdmin(admin.ModelAdmin):
     list_display = ('roles','id')
 @admin.register(Employee_profile)
 class EmployeeProfileAdmin(admin.ModelAdmin):
-    list_display=('employeeID','user','subordinate_list','is_deleted')
+    list_display=('employeeID','user','subordinate_list','created_by','is_deleted')
     def subordinate_list(self,objects):
         return [object.username for object in objects.assigned_subordinate.all()]
 

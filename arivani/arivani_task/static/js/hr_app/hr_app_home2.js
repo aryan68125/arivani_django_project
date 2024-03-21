@@ -13,4 +13,14 @@ function getCookie(name) {
     }
     return cookieValue;
   }
-console.log("hr_app_2.js")
+$('body').ready(function(){
+  disable_input_fields()
+})
+function disable_input_fields(){
+  $('#hrID').prop('disabled', true);
+  $('#username').prop('disabled', true);
+  $('#first_name').prop('disabled', true);
+  $('#last_name').prop('disabled', true);
+  $('#email').prop('disabled', true);
+  $('#select_employee').prop('disabled', true);
+}

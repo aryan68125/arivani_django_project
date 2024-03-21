@@ -817,12 +817,6 @@ function delete_user_permanently(user_id){
         confirmButtonText: "Yes, delete it!"
       }).then((result) => {
         if (result.isConfirmed) {
-          //update user table
-          get_user_profile()
-          get_all_deleted_users()
-          get_deleted_user_count()
-          $('#select_user_role_recycle_bin').val('-1')
-          $('#select_user_role_user_table').val('-1')
           fetch(
             hard_delete_user_accounts_url,{
                 method:'POST',
@@ -836,6 +830,12 @@ function delete_user_permanently(user_id){
         ).then(response=>response.json())
         .then(data=>{
             if (data.status==200){
+                //update user table
+                get_user_profile()
+                get_all_deleted_users()
+                get_deleted_user_count()
+                $('#select_user_role_recycle_bin').val('-1')
+                $('#select_user_role_user_table').val('-1')
                 Swal.fire({
                     title: "Deleted!",
                     text: "User Deleted Permanently!",

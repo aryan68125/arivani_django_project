@@ -8,6 +8,7 @@ class Employee_profile(models.Model):
     employeeID = models.CharField(max_length=10) # userID
     assigned_subordinate = models.ManyToManyField(User, symmetrical=False, related_name='assigned_subordinates', blank=True)
     is_deleted = models.BooleanField(default=False)
+    created_by = models.ForeignKey(User,on_delete=models.CASCADE,related_name='created_by_employee_profiles')
 
 # #Model To keep Track of assigned employee to Hr
 # class AssignedSubordinateHr(models.Model):
