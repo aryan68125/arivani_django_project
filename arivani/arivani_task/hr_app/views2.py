@@ -305,6 +305,7 @@ def verifyOtpRegisterUser_hr(request):
 # CREATE USERS, VERIFY EMAIL AND RE-SEND-OTP ENDS
 # ADD EMPLOYEE RELATED FUNCTIONS ENDS
 
+# HR UPDATE EMPLOYEE RELATED FUNTIONS STARTS
 def hr_app_update_employee_Page(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
@@ -340,3 +341,43 @@ def hr_app_update_employee_Page(request):
             return render(request,'hr_app/hr_app_update_employee.html',data)
     else:
         return redirect("loginUserPage")
+def hr_app_update_get_all_employee(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            if request.method=='POST':
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id=logged_in_user)
+                user_profile = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(user_profile.user_role)
+                if user_role == 2:
+                    users = list(User.objects.all().values())
+                    employee_list = []
+                    for user in users:
+                        if user['id'] != 1:
+                            user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
+                            user_role = int(user_role_assigned.user_role)
+                            user_data = {}
+                            if user_role == 1:
+                                user_profile = Employee_profile.objects.get(user=user['id'])
+                                user_data['user']=user
+                                user_data['userID'] = user_profile.employeeID
+                                user_data['is_deleted'] = user_profile.is_deleted
+                                user_data['created_by'] = user_profile.created_by.username
+                                #get all subbordinates assigned to the manager
+                                subordinates = list(user_profile.assigned_subordinate.all().values())
+                                user_data['subordinates'] = subordinates
+                                if user_profile.created_by == currently_logged_in_user:
+                                    employee_list.append(user_data)
+                                    
+                    data = {
+                        'employee_list':employee_list
+                    }
+                    return JsonResponse({'status':200,'context':data},status=200)
+                else:
+                    return JsonResponse({'status':401,'error':'Only Users with the role of hr can access this api'},status=401)
+            else:
+                return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+        else:
+            return redirect("loginUserPage")
+# HR UPDATE EMPLOYEE RELATED FUNTIONS ENDS

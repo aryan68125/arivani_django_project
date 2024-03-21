@@ -29,4 +29,5 @@ urlpatterns = [
     path('registerVerifyOtpPage_hr/',registerVerifyOtpPage_hr,name="registerVerifyOtpPage_hr_app"),
     path('resendOtp_hr/',resendOtp_hr,name="resendOtp_hr_app"),
     path('verifyOtpRegisterUser_hr/',verifyOtpRegisterUser_hr,name="verifyOtpRegisterUser_hr_app"),
+    path('hr_app_update_get_all_employee/',hr_app_update_get_all_employee,name="hr_app_update_get_all_employee"),
 ]
