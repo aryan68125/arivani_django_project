@@ -341,6 +341,7 @@ def hr_app_update_employee_Page(request):
             return render(request,'hr_app/hr_app_update_employee.html',data)
     else:
         return redirect("loginUserPage")
+#send all employees to be able to display in in the front-end
 def hr_app_update_get_all_employee(request):
     is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
     if is_ajax:
@@ -360,14 +361,18 @@ def hr_app_update_get_all_employee(request):
                             user_data = {}
                             if user_role == 1:
                                 user_profile = Employee_profile.objects.get(user=user['id'])
+                                role_list = RoleList.objects.get(id=user_role)
+                                user_role_name = role_list.roles
                                 user_data['user']=user
                                 user_data['userID'] = user_profile.employeeID
                                 user_data['is_deleted'] = user_profile.is_deleted
                                 user_data['created_by'] = user_profile.created_by.username
+                                user_data['user_role_name'] = user_role_name
+                                user_data['user_role_id'] = user_role
                                 #get all subbordinates assigned to the manager
                                 subordinates = list(user_profile.assigned_subordinate.all().values())
                                 user_data['subordinates'] = subordinates
-                                if user_profile.created_by == currently_logged_in_user:
+                                if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == False:
                                     employee_list.append(user_data)
                                     
                     data = {
@@ -380,4 +385,208 @@ def hr_app_update_get_all_employee(request):
                 return JsonResponse({'status':400,'error':'Bad Request'},status=400)
         else:
             return redirect("loginUserPage")
+# set employee is_active status
+def hr_app_set_employee_is_active(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            if request.method=='POST':
+                logged_in_user = request.user.id
+                current_logged_in_user = User.objects.get(id = logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=current_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    user_pk = f_data['user_pk']
+                    user = User.objects.get(id=user_pk)
+                    if user.is_active == True:
+                        user.is_active = False
+                    else:
+                        user.is_active = True
+                    user.save()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return Jsonresponse({'status':400,'error':'Bad Request'},status=400)
+        else:
+            return redirect("loginUserPage")
+# soft delete employee 
+def hr_app_soft_delete_employee(request):
+    is_ajax = request.headers.get('X-Requested-With')=="XMLHttpRequest"
+    if is_ajax:
+        if request.user.is_authenticated:
+            logged_in_user = request.user.id
+            current_logged_in_user = User.objects.get(id = logged_in_user)
+            ass_user_role = AssignedUserRoles.objects.get(user=current_logged_in_user)
+            user_role = int(ass_user_role.user_role)
+            if request.method == 'POST':
+                if user_role == 2:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    user_pk = f_data['user_pk']
+                    user = User.objects.get(id=user_pk)
+                    user.is_active = False
+                    user.save()
+                    user_profile = Employee_profile.objects.get(user=user)
+                    user_profile.is_deleted = True
+                    user_profile.save()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return Jsonresponse({'status':400,'error':'Bad Request'},status=400)
+        else:
+            return redirect("loginUserPage")
+# Get all deleted userd from recycle bin
+def hr_app_gel_all_deleted_users(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            if request.method=='POST':
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id = logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                        users = list(User.objects.all().values())
+                        employee_list = []
+                        for user in users:
+                            if user['id'] != 1:
+                                user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
+                                user_role = int(user_role_assigned.user_role)
+                                user_data = {}
+                                if user_role == 1:
+                                    user_profile = Employee_profile.objects.get(user=user['id'])
+                                    role_list = RoleList.objects.get(id=user_role)
+                                    user_role_name = role_list.roles
+                                    user_data['user']=user
+                                    user_data['userID'] = user_profile.employeeID
+                                    user_data['is_deleted'] = user_profile.is_deleted
+                                    user_data['created_by'] = user_profile.created_by.username
+                                    user_data['user_role_name'] = user_role_name
+                                    user_data['user_role_id'] = user_role
+                                    #get all subbordinates assigned to the manager
+                                    subordinates = list(user_profile.assigned_subordinate.all().values())
+                                    user_data['subordinates'] = subordinates
+                                    if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == True:
+                                        employee_list.append(user_data)
+                        data = {
+                            'employee_list':employee_list
+                        }
+                        return JsonResponse({'status':200,'context':data},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return Jsonresponse({'status':400,'error':'Bad Request'},status=400)
+        else:
+            return rediretct("loginUserPage")
+#restore user from recycle bin
+def hr_app_restore_user(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.method=='POST':
+            if request.user.is_authenticated:
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id = logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    user_pk = f_data['user_id']
+                    user = User.objects.get(id=user_pk)
+                    user.is_active = True
+                    user.save()
+                    user_profile = Employee_profile.objects.get(user = user)
+                    if user_profile.is_deleted == True:
+                        user_profile.is_deleted = False
+                    user_profile.save()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return redirect("loginUserPage")
+        else:
+            return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+
+# gat all the users counts who are in the recycle bin
+def hr_app_get_all_deleted_user_count(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.method=='POST':
+            if request.user.is_authenticated:
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id=logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                    deleted_users_count = Employee_profile.objects.filter(is_deleted=True).count()
+                    data = {
+                        'deleted_users_count':deleted_users_count
+                    }
+                    return JsonResponse({'status':200,'context':data},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return redirect("loginUserPage")
+        else:
+            return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+#update employee function 
+def hr_app_update_employee_record(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.method=='POST':
+            if request.user.is_authenticated:
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id = logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    user_pk = f_data['user_pk']
+                    user_role_id = f_data['user_role_id']
+                    username = f_data['username']
+                    first_name = f_data['first_name']
+                    last_name = f_data['last_name']
+                    email = f_data['email']
+                    user = User.objects.get(id=user_pk)
+                    user.username = username
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.email = email
+                    user.save()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return redirect("loginUserPage")
+        else:
+            return JsonResponse({'status':400,'error':'Bad Request'},status=400)
+#perpanently delete employee
+def hr_app_delete_user_permanently(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.method=='POST':
+            if request.user.is_authenticated:
+                logged_in_user = request.user.id
+                currently_logged_in_user = User.objects.get(id=logged_in_user)
+                ass_user_role = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+                user_role = int(ass_user_role.user_role)
+                if user_role == 2:
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    # print(f"data from front-end {f_data}")
+                    user_pk = f_data['user_id']
+                    user = User.objects.get(id=user_pk)
+                    user.delete()
+                    return JsonResponse({'status':200},status=200)
+                else:
+                    return redirect("loginUserPage")
+            else:
+                return redirect("loginUserPage")
+        else:
+            return JsonResponse({'status':400,'error':'Bad request'},status=400)
 # HR UPDATE EMPLOYEE RELATED FUNTIONS ENDS

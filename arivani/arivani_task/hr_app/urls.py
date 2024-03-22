@@ -30,4 +30,11 @@ urlpatterns = [
     path('resendOtp_hr/',resendOtp_hr,name="resendOtp_hr_app"),
     path('verifyOtpRegisterUser_hr/',verifyOtpRegisterUser_hr,name="verifyOtpRegisterUser_hr_app"),
     path('hr_app_update_get_all_employee/',hr_app_update_get_all_employee,name="hr_app_update_get_all_employee"),
+    path('hr_app_set_employee_is_active/',hr_app_set_employee_is_active,name="hr_app_set_employee_is_active"),
+    path('hr_app_soft_delete_employee/',hr_app_soft_delete_employee,name="hr_app_soft_delete_employee"),
+    path('hr_app_gel_all_deleted_users/',hr_app_gel_all_deleted_users,name="hr_app_gel_all_deleted_users"),
+    path('hr_app_restore_user/',hr_app_restore_user,name="hr_app_restore_user"),
+    path('hr_app_get_all_deleted_user_count/',hr_app_get_all_deleted_user_count,name="hr_app_get_all_deleted_user_count"),
+    path('hr_app_update_employee_record/',hr_app_update_employee_record,name="hr_app_update_employee_record"),
+    path('hr_app_delete_user_permanently/',hr_app_delete_user_permanently,name="hr_app_delete_user_permanently"),
 ]

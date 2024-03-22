@@ -7,6 +7,13 @@
 
   <script>
     var hr_app_update_get_all_employee_url = "{% url 'hr_app_update_get_all_employee' %}"
+    var hr_app_set_employee_is_active_url = '{% url "hr_app_set_employee_is_active" %}'
+    var hr_app_soft_delete_employee_url = '{% url "hr_app_soft_delete_employee" %}'
+    var hr_app_gel_all_deleted_users_url = '{% url "hr_app_gel_all_deleted_users" %}'
+    var hr_app_restore_user_url = '{% url "hr_app_restore_user" %}'
+    var hr_app_get_all_deleted_user_count_url = '{% url "hr_app_get_all_deleted_user_count" %}'
+    var hr_app_update_employee_record_url = '{% url "hr_app_update_employee_record" %}'
+    var hr_app_delete_user_permanently_url = '{% url "hr_app_delete_user_permanently" %}'
   </script>
   <div class=" row ms-3">
     <h3>Management Page for {{role_name}} ({{name}})</h3>
@@ -59,6 +66,7 @@
               <th scope="col">#</th>
               <th scope="col" style="display:none">user_id</th>
               <th scope="col" style="display:none">user_role_id</th>
+              <th scope="col">Action</th>
               <th scope="col">Employee ID</th>
               <th scope="col">Username</th>
               <th scope="col">First Name</th>
@@ -83,7 +91,7 @@
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  Assign Employees to You ({{name}})
+                  Update Employees
                 </button>
               </h2>
               <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
@@ -91,27 +99,20 @@
                     <div class="row">
                       <!--Disable all input here-->
                         <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                                <input type="text" class="form-control" id="hrID" placeholder="HrID" value = "{{user_profile_id}}"> 
+                                <input type="text" class="form-control" id="employeeID" placeholder="employeeID"> 
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                                <input type="text" class="form-control" id="username" placeholder="Username of Hr" value="{{username}}">
+                                <input type="text" class="form-control" id="username" placeholder="Username of Employee">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                          <input type="text" class="form-control" id="first_name" placeholder="First Name of Hr" value="{{first_name}}">
+                          <input type="text" class="form-control" id="first_name" placeholder="First Name of Employee">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                          <input type="text" class="form-control" id="last_name" placeholder="Last Name of Hr" value="{{last_name}}">
+                          <input type="text" class="form-control" id="last_name" placeholder="Last Name of Employee">
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                          <input type="text" class="form-control" id="email" placeholder="Email of Hr" value="{{email}}">
+                          <input type="text" class="form-control" id="email" placeholder="Email of Employee">
                         </div>
-                    </div>
-                    <div class="row my-2">
-                      <div class="col-lg-6 col-md-6 col-sm-12 my-2">
-                        <select class="form-select my-2"  data-placeholder="Select Employee" multiple="multiple" id="select_employee">
-                              <option value="">--No Employee--</option>
-                        </select>
-                      </div>
                     </div>
                     <div class="row mt-3">
                         <div class="row mb-3">
@@ -131,6 +132,7 @@
                   <th scope="col">#</th>
                   <th scope="col" style="display:none">user_id</th>
                   <th scope="col" style="display:none">user_role_id</th>
+                  <th scope="col">Action</th>
                   <th scope="col">Employee ID</th>
                   <th scope="col">Username</th>
                   <th scope="col">First Name</th>
