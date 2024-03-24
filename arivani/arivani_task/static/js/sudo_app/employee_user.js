@@ -73,7 +73,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -102,7 +102,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -133,7 +133,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -162,7 +162,7 @@ function create_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column_rb_${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb_${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}','${user_profile_data.employeeID}','${user_list.username}','${user_list.first_name}','${user_list.last_name}','${user_list.email}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -249,7 +249,9 @@ function is_deleted_button_(is_deleted_button_id,user_id){
     // console.log(user_id)
     // console.log(is_deleted_button_id)
 }
-function action_rb(element_id,user_id,userrole_id,employeeID,username,first_name,last_name,email){
+function action(element_id,user_id,userrole_id,employeeID,username,first_name,last_name,email){
+    console.log("action function")
+    console.log(element_id)
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <button class="btn btn-danger" onclick="delete_user('${user_id}')"><i class="fa-solid fa-trash"></i></button>
@@ -592,7 +594,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -621,7 +623,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>       
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -652,7 +654,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div itable_data_deletedd="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div id="action_column_rb${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -681,7 +683,7 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
                     <th scope="row">${i+1}</th>
                     <th scope="row" style="display:none">${user_list.id}</th>                    
                     <th scope="row" style="display:none">${user_profile_data.user_role}</th>
-                    <td><div class="row" id="action_column${i+1}"><button class="btn btn-light" onclick="action('action_column${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
+                    <td><div class="row" id="action_column_rb${i+1}"><button class="btn btn-light" onclick="action_rb('action_column_rb${i+1}','${user_list.id}','${user_profile_data.user_role}')" style="background:#c4c1e0">...</button></div></td>
                     <td>${user_profile_data.employeeID}</td>
                     <td>${user_list.username}</td>
                     <td>${user_list.first_name}</td>
@@ -705,7 +707,9 @@ function create_recycle_bin_table(user_profile_data,user_list,i){
         }
     }
 }
-function action(element_id,user_id,userrole_id){
+function action_rb(element_id,user_id,userrole_id){
+    console.log("action button clicked in rb")
+    console.log(element_id)
     $(`#${element_id}`).empty()
     $(`#${element_id}`).append(`
     <div class="col-lg-6 col-md-6 col-sm-12">

@@ -155,6 +155,7 @@ def register_employee_hr(request):
                         except User.DoesNotExist:
                             if password1 == password2:
                                 if is_valid_password(password1):
+                                    #employee users created
                                     user = User.objects.create(
                                         username = username,
                                         email = email,
@@ -164,6 +165,11 @@ def register_employee_hr(request):
                                     user.set_password(password1)
                                     user.is_active=False
                                     user.save()
+                                    # currently logged in hr
+                                    user_hr = User.objects.get(id=logged_in_user)
+                                    #save the employees in assigned_subordinate under currently logged in user 
+                                    user_hr_profile = Employee_profile.objects.get(user=user_hr)
+                                    user_hr_profile.assigned_subordinate.add(user)
 
                                     #save the role in Db related to this particular user that we just registered
                                     role_db = RoleList.objects.get(id=selected_role)

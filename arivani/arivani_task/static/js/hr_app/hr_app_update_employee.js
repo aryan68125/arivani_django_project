@@ -379,6 +379,7 @@ function delete_user(user_pk){
        get_all_employee_created_by_hr()
        get_all_deleted_ursers_by_hr()
        get_deleted_users_count()
+       reset_form()
        Swal.fire({
            position: "top-end",
            icon: "success",

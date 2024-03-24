@@ -103,6 +103,63 @@ def registerUser(request):
                         password1 = user_data['password1']
                         password2 = user_data['password2']
                         selected_role = user_data['role_select']
+                        # if password1 == password2:
+                        #         if is_valid_password(password1):
+                        #             user = User.objects.create(
+                        #                 username = username,
+                        #                 email = email,
+                        #                 first_name=first_name,
+                        #                 last_name=last_name
+                        #             )
+                        #             user.set_password(password1)
+                        #             user.is_active=False
+                        #             user.save()
+
+                        #             #save the role in Db related to this particular user that we just registered
+                        #             role_db = RoleList.objects.get(id=selected_role)
+                        #             AssignedUserRoles.objects.create(
+                        #                 user=user,
+                        #                 user_role = role_db.id
+                        #             )
+
+                        #             #generate IDs based on roles employeeID, hrID, managerID
+                        #             #set user's is_deleted to false by default
+                        #             current_logged_in_user_instance = User.objects.get(id=logged_in_user)
+                        #             Employee_profile.objects.create(
+                        #                 user = user,
+                        #                 employeeID = str(user.id) + role_db.roles,
+                        #                 is_deleted = False,
+                        #                 created_by = current_logged_in_user_instance,
+                        #             )
+
+                        #             # save user email and username for later use
+                        #             user_save.clear()
+                        #             user_save['email'] = email
+                        #             user_save['username'] = username
+                        #             # generate a random otp and save it for later use
+                        #             otp_save.clear()
+                        #             otp_save['otp'] = random.randint(1000,9999)
+                        #             print(f"otp_save : {otp_save}")
+                                    
+                        #             #send otp via email here
+                        #             # Prepare email
+                        #             otp = otp_save['otp']
+                        #             email_id = user_save['email']
+                        #             username = user_save['username']
+                        #             subject = f"{username} please verify your email"
+                        #             message = f"Verify this otp : {otp}"
+                        #             recipient_list = [email_id]
+    
+                        #             # Create EmailMessage object and attach the Excel file
+                        #             email = EmailMessage(subject, message, settings.EMAIL_HOST_USER, recipient_list)
+    
+                        #         # Send the email
+                        #             email.send()
+                        #             return JsonResponse({'status':200},status=200) 
+                        #         else:
+                        #             return JsonResponse({'status':500,'error':'password is not valid'},status=500)
+                        # else:
+                        #         return JsonResponse({'status':500,'error':'password did not match'},status=500)
                         try:
                             is_email_taken = User.objects.get(email=email)
                             taken_email = is_email_taken.email
@@ -167,7 +224,7 @@ def registerUser(request):
                             else:
                                 return JsonResponse({'status':500,'error':"Password don't match"})
                     except IntegrityError as e:
-                        return JsonResponse({'status':500,'error':'username taken'},status=500)
+                        return JsonResponse({'status':500,'error':str(e)},status=500)
                 else:
                     return JsonResponse({'status':400,'error':'bad request'},status=400)
         else:
@@ -338,6 +395,8 @@ def delete_user_accounts(request):
                 f_data = data.get('payload')
                 user_id_f = f_data['user_id']
                 user_instance = User.objects.get(id=user_id_f)
+                user_instance.is_active = False
+                user_instance.save()
                 user_profile_instance = Employee_profile.objects.get(user=user_instance)
                 user_profile_instance.is_deleted = True
                 user_profile_instance.save()
@@ -419,6 +478,8 @@ def restore_user(request):
                 data = json.load(request)
                 f_data = data.get('payload')
                 user_instance = User.objects.get(id=f_data['user_id'])
+                user_instance.is_active = True
+                user_instance.save()
                 user_profile_instance = Employee_profile.objects.get(user=user_instance)
                 user_profile_instance.is_deleted = False
                 user_profile_instance.save()
