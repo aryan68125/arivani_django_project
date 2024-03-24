@@ -51,6 +51,7 @@ def is_valid_password(password):
     return True
 # Custom password validation for change password
 
+#HR PROFILE PAGE RELATED FUNCTIONS STARTS
 def hr_home(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
@@ -88,6 +89,43 @@ def hr_home(request):
             return render(request,'hr_app/hr_app_home2.html',data)
     else:
         return redirect("loginUserPage")
+def hr_app_update_hr_profile(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            logged_in_user = request.user.id
+            currently_logged_in_user = User.objects.get(id=logged_in_user)
+            user_profile = AssignedUserRoles.objects.get(user=currently_logged_in_user)
+            user_role = int(user_profile.user_role)
+            if user_role==2:
+                if request.method=='POST':
+                    data = json.load(request)
+                    f_data = data.get('payload')
+                    userID = f_data['hrID']
+                    user_pk = int(re.search(r'\d+', userID).group())
+                    username = f_data['username']
+                    first_name = f_data['first_name']
+                    last_name = f_data['last_name']
+                    email = f_data['email']
+                    try:
+                        user = User.objects.get(email=email,username=username)
+                        return JsonResponse({'status':500,'error':'username or email is taken'},status=500)
+                    except User.DoesNotExist:
+                        currently_logged_in_user.username=username
+                        currently_logged_in_user.first_name=first_name
+                        currently_logged_in_user.last_name=last_name
+                        currently_logged_in_user.email=email
+                        currently_logged_in_user.save()
+                        return JsonResponse({'status':200},status=200)
+                    except IntegrityError as e:
+                        return JsonResponse({'status':500,'error':e},status=500)
+                else:
+                    return JsonResponse({'status':400,'error':'Bad Request'},status==400)
+            else:
+                return redirect("loginUserPage")
+        else:
+            return redirect("loginUserPage")
+#HR PROFILE PAGE RELATED FUNCTIONS ENDS
 
 # ADD EMPLOYEE RELATED FUNCTIONS STARTS
 def hr_add_employee_Page(request):
@@ -584,9 +622,13 @@ def hr_app_delete_user_permanently(request):
                 if user_role == 2:
                     data = json.load(request)
                     f_data = data.get('payload')
-                    # print(f"data from front-end {f_data}")
                     user_pk = f_data['user_id']
+                    #delete employee from many to many relation from under this logged in hr
+                    user_hr_profile = Employee_profile.objects.get(user=currently_logged_in_user)
+                    #delete employee permanently
                     user = User.objects.get(id=user_pk)
+                    #remove the user to eleted from many tomany relation before deleting
+                    user_hr_profile.assigned_subordinate.remove(user) 
                     user.delete()
                     return JsonResponse({'status':200},status=200)
                 else:
