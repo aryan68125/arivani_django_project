@@ -24,7 +24,10 @@ from django.core.mail import EmailMessage
 
 #django messeges related imports
 from django.contrib import messages
-
+from auth_user.models import *
+from sudo_app.models import *
+from employee.models import *
+from hr_app.models import *
 # Custom password validation for change password
 def is_valid_password(password):
     # Check if password has minimum 6 characters
@@ -309,9 +312,46 @@ def logoutUser(request):
 
 
 # This function should be accesible after the user is logged in starts
+# def ChangePasswordPage(request):
+#     if request.user.is_authenticated:
+#         return render(request,'auth_user/changeUserPass.html')
+#     else:
+#         return redirect("loginUserPage")
 def ChangePasswordPage(request):
     if request.user.is_authenticated:
-        return render(request,'auth_user/changeUserPass.html')
+        logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        first_name = user.first_name
+        last_name = user.last_name
+        email = user.email
+        username = user.username
+
+        name = first_name + " " + last_name
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
+        role_list = RoleList.objects.get(id=user_role)
+        role_name = role_list.roles
+        user_profile = Employee_profile.objects.get(user=user)
+        user_profile_id = user_profile.employeeID
+        if user.is_superuser:
+            data = {
+                'is_superuser':1,
+                'role_name':role_name,
+                'name':name,
+            }
+            return render(request,'auth_user/changeUserPass.html',data)
+        else:
+            data = {
+                'user_role':user_role,
+                'role_name':role_name,
+                'name':name,
+                'username':username,
+                'first_name':first_name,
+                'last_name':last_name,
+                'email':email,
+                'user_profile_id':user_profile_id,
+            }
+            return render(request,'auth_user/changeUserPass.html',data)
     else:
         return redirect("loginUserPage")
 

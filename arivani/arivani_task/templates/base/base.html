@@ -110,7 +110,13 @@
                 <a href="{% url 'dashboardPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Home</a>
               </li>
               <li href="#" class="nav-link" id = "Employee">
-                <a href="{% url 'ManagerPage' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager</a>
+                <a href="{% url 'manager_home' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Manager</a>
+              </li>
+              <li href="#" class="nav-link" id = "ADDEmployee">
+                <a href="{% url 'manager_add_hr_Page' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Add Hr</a>
+              </li>
+              <li href="#" class="nav-link" id = "ADDEmployee">
+                <a href="{% url 'manager_app_update_hr_Page' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Update Hr</a>
               </li>
               <li href="#" class="nav-link" id = "logoutUser">
                 <a href= "{% url 'logoutUser' %}" class="mx-2" style="text-decoration:none; font-weight:bolder; color:#53a8b6;">Logout</a>
