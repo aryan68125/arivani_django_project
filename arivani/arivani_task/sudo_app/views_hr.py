@@ -78,7 +78,7 @@ def get_all_employees(request):
                 else:
                     return JsonResponse({'status':400,'error':'Bad Request'},status=400)
             else:
-                return Jsonresponse({'status':401,'error':'You are not Authorize to access this link'},status=401)
+                return JsonResponse({'status':401,'error':'You are not Authorize to access this link'},status=401)
         else:
             return redirect("loginUserPage")
 #get all hr's
@@ -113,7 +113,7 @@ def get_all_hr(request):
                 else:
                     return JsonResponse({'status':400,'error':'Bad Request'},status=400)
             else:
-                return Jsonresponse({'status':401,'error':'You are not Authorize to access this link'},status=401)
+                return JsonResponse({'status':401,'error':'You are not Authorize to access this link'},status=401)
         else:
             return redirect("loginUserPage")
 # GET ALL DATA ENDS

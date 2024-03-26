@@ -1,0 +1,152 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/hr_app/hr_app.css' %}" rel="stylesheet"/>
+<div class="container">
+
+  <script>
+     var get_all_employees_manager_app_url = '{% url "get_all_employees_manager_app" %}'
+     var get_all_hr_manager_app_url = '{% url "get_all_hr_manager_app" %}'
+     var assign_subordinates_manager_app_url = '{% url "assign_subordinates_manager_app" %}'
+     var get_all_assigned_subordinates_manager_app_url = '{% url "get_all_assigned_subordinates_manager_app" %}'
+  </script>
+  <div class=" row ms-3">
+    <h3>Hr Management Page for Managers</h3>
+  </div>
+<!--Recycle Page Employee Management-->
+<div class="card">
+  <div class="card-body" style="background:#CFE2FF;">
+    <div class="row">
+      <div class="col-sm-3 ">
+        <div class="row">
+          <div class="col-sm-2 ">
+            <span class="fs-3"  style="font-weight:bolder;"><i class="fa-solid fa-users"></i></span>
+          </div>
+          <div class="col-sm-10 ">
+            <h4>Select Employee</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4 ">
+        
+      </div>
+      <div class="col-sm-5">
+        <div class="row">
+          <div class="col-sm-6"></div>
+          <div class="col-sm-4"></div>
+          <div class="col-sm-2">
+            {% comment %} <form action="{% url 'recycle_bin_hr' %}" method="POST">
+              {% csrf_token %}
+              <button class="btn btn-secondary " style="background:#c4c1e0" type="submit" aria-expanded="false">
+                ...
+              </button>
+            </form> {% endcomment %}
+            <button id="recycle_bin_btn" class="btn btn-secondary " style="background:#c4c1e0" type="button" aria-expanded="false">
+              ...
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card" id="recyclebin_data_card">
+  <div class="card-body">
+    <div class="table-responsive scrollable-table">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" style="display:none">user_id</th>
+              <th scope="col" style="display:none">user_role_id</th>
+              <th scope="col">Employee ID</th>
+              <th scope="col">Username</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+              <th scope="col">Email Address</th>
+              <th scope="col">Role</th>
+              <th scope="col">Status</th>
+              <th scope="col">Is Deleted</th>
+              <th scope="col">Date Joined</th>
+            </tr>
+          </thead>
+          <tbody id="table_data_employee">
+              
+          </tbody>
+        </table>
+    </div>
+  </div>
+</div>
+<!--Recycle Page Employee Management-->
+
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Assign Employees to Hr
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="hrID">Hr ID</label>
+                                <input type="text" class="form-control" id="hrID" placeholder="HrID">
+                                <p class ="text-danger" id="hrID_error" style="display:none">hrID field can't be empty</p>
+                                <p class ="text-danger" id="hrID_number_error" style="display:none">hrID should be a number</p>
+                                <p class ="text-danger" id="hrID_positive_number_error" style="display:none">hrID should be a positive number</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                                <label class="visually-hidden" for="name">Name</label>
+                                <input type="text" class="form-control" id="name" placeholder="Name of Hr">
+                                <p class ="text-danger" id="name_error" style="display:none">name field can't be empty</p>
+                        </div>
+                    </div>
+                    <div class="row my-2">
+                      <div class="col-lg-6 col-md-6 col-sm-12">
+                        <select class="form-select my-2"  data-placeholder="Select Employee" multiple="multiple" id="select_employee">
+                              <option value="">--No Employee--</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%">Save</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="table-responsive scrollable-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col" style="display:none">user_id</th>
+                  <th scope="col" style="display:none">user_role_id</th>
+                  <th scope="col">Hr ID</th>
+                  <th scope="col">Username</th>
+                  <th scope="col">First Name</th>
+                  <th scope="col">Last Name</th>
+                  <th scope="col">Email Address</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Is Deleted</th>
+                  <th scope="col">Date Joined</th>
+                </tr>
+              </thead>
+              <tbody id="table_data_hr">
+                  
+              </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/manager/manager_ass_employee_hr.js' %}"></script>
+{% endblock content %}
