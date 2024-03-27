@@ -50,7 +50,7 @@ def is_valid_password(password):
 # Custom password validation for change password
 
 # Create your views here.
-
+# DASHBOARD RELATED FUNCTIONS STARTS
 def dashboard(request):
     if request.user.is_authenticated:
         logged_in_user = request.user.id
@@ -64,6 +64,8 @@ def dashboard(request):
             return redirect("loginUserPage")
     else:
         return redirect("loginUserPage")
+
+# DASHBOARD RELATED FUNCTIONS ENDS
 
 # CREATE USERS, VERIFY EMAIL AND ASSIGN THEM ROLES ADMIN APP STARTS
 def createUserPage(request):

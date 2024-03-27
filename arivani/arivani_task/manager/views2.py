@@ -400,26 +400,51 @@ def manager_app_update_get_all_hr(request):
                 if user_role == 3: # if manager
                     users = list(User.objects.all().values())
                     employee_list = []
-                    for user in users:
-                        if user['id'] != 1:
-                            user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
-                            user_role = int(user_role_assigned.user_role)
-                            user_data = {}
-                            if user_role == 2: # hr list
-                                user_profile = Employee_profile.objects.get(user=user['id'])
-                                role_list = RoleList.objects.get(id=user_role)
-                                user_role_name = role_list.roles
-                                user_data['user']=user
-                                user_data['userID'] = user_profile.employeeID
-                                user_data['is_deleted'] = user_profile.is_deleted
-                                user_data['created_by'] = user_profile.created_by.username
-                                user_data['user_role_name'] = user_role_name
-                                user_data['user_role_id'] = user_role
-                                #get all subbordinates assigned to the manager
-                                subordinates = list(user_profile.assigned_subordinate.all().values())
-                                user_data['subordinates'] = subordinates
-                                if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == False:
-                                    employee_list.append(user_data) # hr list
+                    # OLD CODE (STATUS = WORKING)
+                    # for user in users:
+                    #     if user['id'] != 1:
+                    #         user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
+                    #         user_role = int(user_role_assigned.user_role)
+                    #         user_data = {}
+                    #         if user_role == 2: # hr list
+                    #             user_profile = Employee_profile.objects.get(user=user['id'])
+                    #             role_list = RoleList.objects.get(id=user_role)
+                    #             user_role_name = role_list.roles
+                    #             user_data['user']=user
+                    #             user_data['userID'] = user_profile.employeeID
+                    #             user_data['is_deleted'] = user_profile.is_deleted
+                    #             user_data['created_by'] = user_profile.created_by.username
+                    #             user_data['user_role_name'] = user_role_name
+                    #             user_data['user_role_id'] = user_role
+                    #             #get all subbordinates assigned to the manager
+                    #             subordinates = list(user_profile.assigned_subordinate.all().values())
+                    #             user_data['subordinates'] = subordinates
+                    #             if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == False:
+                    #                 employee_list.append(user_data) # hr list
+                    # OLD CODE (STATUS = WORKING)
+
+                    # **** TESTING CODE ****
+                    #get the subordinates of the currently logged in user (Hr)
+                    # tHIS CODE displays the employee under hr in a table
+                    hr_user_profile = Employee_profile.objects.get(user=logged_in_user)
+                    subordinates = list(hr_user_profile.assigned_subordinate.all().values())
+                    for subbordinate in subordinates:
+                        user_profile = AssignedUserRoles.objects.get(user=subbordinate['id'])
+                        user_role = int(user_profile.user_role)
+                        user_data = {}
+                        if user_role == 2:
+                            user_profile = Employee_profile.objects.get(user=subbordinate['id'])
+                            role_list = RoleList.objects.get(id=user_role)
+                            user_role_name = role_list.roles
+                            user_data['user']=subbordinate
+                            user_data['userID'] = user_profile.employeeID
+                            user_data['is_deleted'] = user_profile.is_deleted
+                            user_data['created_by'] = user_profile.created_by.username
+                            user_data['user_role_name'] = user_role_name
+                            user_data['user_role_id'] = user_role
+                            if user_profile.is_deleted == False:
+                                employee_list.append(user_data)  
+
                     # hr list dictionary                
                     data = {
                         'employee_list':employee_list
@@ -498,26 +523,49 @@ def manager_app_gel_all_deleted_users(request):
                 if user_role == 3:
                         users = list(User.objects.all().values())
                         employee_list = []
-                        for user in users:
-                            if user['id'] != 1:
-                                user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
-                                user_role = int(user_role_assigned.user_role)
-                                user_data = {}
-                                if user_role == 2:
-                                    user_profile = Employee_profile.objects.get(user=user['id'])
-                                    role_list = RoleList.objects.get(id=user_role)
-                                    user_role_name = role_list.roles
-                                    user_data['user']=user
-                                    user_data['userID'] = user_profile.employeeID
-                                    user_data['is_deleted'] = user_profile.is_deleted
-                                    user_data['created_by'] = user_profile.created_by.username
-                                    user_data['user_role_name'] = user_role_name
-                                    user_data['user_role_id'] = user_role
-                                    #get all subbordinates assigned to the manager
-                                    subordinates = list(user_profile.assigned_subordinate.all().values())
-                                    user_data['subordinates'] = subordinates
-                                    if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == True:
-                                        employee_list.append(user_data)
+                        # OLD CODE (STATUS = WORKING)
+                        # for user in users:
+                        #     if user['id'] != 1:
+                        #         user_role_assigned = AssignedUserRoles.objects.get(user = user['id'])
+                        #         user_role = int(user_role_assigned.user_role)
+                        #         user_data = {}
+                        #         if user_role == 2:
+                        #             user_profile = Employee_profile.objects.get(user=user['id'])
+                        #             role_list = RoleList.objects.get(id=user_role)
+                        #             user_role_name = role_list.roles
+                        #             user_data['user']=user
+                        #             user_data['userID'] = user_profile.employeeID
+                        #             user_data['is_deleted'] = user_profile.is_deleted
+                        #             user_data['created_by'] = user_profile.created_by.username
+                        #             user_data['user_role_name'] = user_role_name
+                        #             user_data['user_role_id'] = user_role
+                        #             #get all subbordinates assigned to the manager
+                        #             subordinates = list(user_profile.assigned_subordinate.all().values())
+                        #             user_data['subordinates'] = subordinates
+                        #             if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == True:
+                        #                 employee_list.append(user_data)
+                        # OLD CODE (STATUS = WORKING)
+                        # **** TESTING CODE ****
+                        #get the subordinates of the currently logged in user (Hr)
+                        # tHIS CODE displays the employee under hr in a table
+                        hr_user_profile = Employee_profile.objects.get(user=logged_in_user)
+                        subordinates = list(hr_user_profile.assigned_subordinate.all().values())
+                        for subbordinate in subordinates:
+                            user_profile = AssignedUserRoles.objects.get(user=subbordinate['id'])
+                            user_role = int(user_profile.user_role)
+                            user_data = {}
+                            if user_role == 2:
+                                user_profile = Employee_profile.objects.get(user=subbordinate['id'])
+                                role_list = RoleList.objects.get(id=user_role)
+                                user_role_name = role_list.roles
+                                user_data['user']=subbordinate
+                                user_data['userID'] = user_profile.employeeID
+                                user_data['is_deleted'] = user_profile.is_deleted
+                                user_data['created_by'] = user_profile.created_by.username
+                                user_data['user_role_name'] = user_role_name
+                                user_data['user_role_id'] = user_role
+                                if user_profile.is_deleted == True:
+                                    employee_list.append(user_data) 
                         data = {
                             'employee_list':employee_list
                         }
@@ -783,7 +831,7 @@ def registerVerifyOtpPage_employee_manager(request):
             data={
                 'title':title
             }
-            return render(request,'manager/manager_verifyOtpRegister.html',data)
+            return render(request,'manager/manager_employee_verifyOtpRegister.html',data)
         else:
             return redirect("loginUserPage")
     else:
@@ -1240,22 +1288,45 @@ def get_all_hr_manager_app(request):
                 if request.method=='POST':
                     user_list = list(User.objects.all().values())
                     user_employee_list = []
-                    for user in user_list:
-                        admin = 1
-                        if user['id'] != admin:
-                            user_role_list = {}
-                            get_user_role = AssignedUserRoles.objects.get(user=user['id'])
-                            if get_user_role.user_role == '2':
-                                user_profile = Employee_profile.objects.get(user=user['id'])
-                                role_list = RoleList.objects.get(id=get_user_role.user_role)
-                                employee_profile_id = Employee_profile.objects.get(user=user['id']) 
-                                user_role_list['user_role'] = get_user_role.user_role #role id
-                                user_role_list['user_role_name'] = role_list.roles #role name
-                                user_role_list['employeeID'] = employee_profile_id.employeeID
-                                user_role_list['is_deleted'] = employee_profile_id.is_deleted
-                                user_role_list['user'] = user
-                                if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == False:
-                                    user_employee_list.append(user_role_list)
+                    # **** OLD CODE (STATUS = WORKING)
+                    # for user in user_list:
+                    #     admin = 1
+                    #     if user['id'] != admin:
+                    #         user_role_list = {}
+                    #         get_user_role = AssignedUserRoles.objects.get(user=user['id'])
+                    #         if get_user_role.user_role == '2':
+                    #             user_profile = Employee_profile.objects.get(user=user['id'])
+                    #             role_list = RoleList.objects.get(id=get_user_role.user_role)
+                    #             employee_profile_id = Employee_profile.objects.get(user=user['id']) 
+                    #             user_role_list['user_role'] = get_user_role.user_role #role id
+                    #             user_role_list['user_role_name'] = role_list.roles #role name
+                    #             user_role_list['employeeID'] = employee_profile_id.employeeID
+                    #             user_role_list['is_deleted'] = employee_profile_id.is_deleted
+                    #             user_role_list['user'] = user
+                    #             if user_profile.created_by == currently_logged_in_user and user_profile.is_deleted == False:
+                    #                 user_employee_list.append(user_role_list)
+                    # **** OLD CODE (STATUS = WORKING)
+                    # **** TESTING CODE ****
+                    #get the subordinates of the currently logged in user (Hr)
+                    # tHIS CODE displays the employee under hr in a table
+                    manager_user_profile = Employee_profile.objects.get(user=logged_in_user)
+                    subordinates = list(manager_user_profile.assigned_subordinate.all().values())
+                    for subbordinate in subordinates:
+                        user_profile = AssignedUserRoles.objects.get(user=subbordinate['id'])
+                        user_role = int(user_profile.user_role)
+                        user_data = {}
+                        if user_role == 2:
+                            user_profile = Employee_profile.objects.get(user=subbordinate['id'])
+                            role_list = RoleList.objects.get(id=user_role)
+                            user_role_name = role_list.roles
+                            user_data['user']=subbordinate
+                            user_data['employeeID'] = user_profile.employeeID
+                            user_data['is_deleted'] = user_profile.is_deleted
+                            user_data['created_by'] = user_profile.created_by.username
+                            user_data['user_role_name'] = user_role_name
+                            user_data['user_role_id'] = user_role
+                            if user_profile.is_deleted == False:
+                                user_employee_list.append(user_data) 
                     data = {
                         'user_employee_list':user_employee_list,
                     }
@@ -1267,7 +1338,6 @@ def get_all_hr_manager_app(request):
         else:
             return redirect("loginUserPage")
 # GET ALL DATA ENDS
-
 def assign_subordinates_manager_app(request):
     is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
     if is_ajax:
@@ -1289,7 +1359,6 @@ def assign_subordinates_manager_app(request):
                     user_hr = User.objects.get(id=hr_id) 
                     user_profile_hr = Employee_profile.objects.get(user=user_hr)
                     
-
                     user_profile_hr.assigned_subordinate.clear()  
                     # Add selected Hr_model instances to the manager
                     for employee_id in employee_id_list:
@@ -1298,6 +1367,7 @@ def assign_subordinates_manager_app(request):
                         user_profile_employee = Employee_profile.objects.get(user=user_employee)
                         user_profile_hr.assigned_subordinate.add(user_employee)
                     user_profile_hr.save()
+
                     return JsonResponse({'status':200},status=200)
                 else:
                     return JsonResponse({'status':400,'error':'Bad Request'},status=400)

@@ -1,0 +1,55 @@
+{% extends "base/base.html" %}
+{% load static %}
+{% block title %}{% endblock title %}
+{% block content %}
+<link href="{% static 'css/hr_app/hr_app.css' %}" rel="stylesheet"/>
+<div class="container">
+
+  <script>
+    var employee_app_update_employee_profile_url = '{% url "employee_app_update_employee_profile" %}'
+  </script>
+  <div class=" row ms-3">
+    <h3>Profile Page for {{role_name}} ({{name}})</h3>
+  </div>
+    <div class="row mt-5">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" id="acc_title" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Profile for ({{name}})
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div class="row">
+                      <!--Disable all input here-->
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                                <input type="text" class="form-control" id="employeeID" placeholder="EmployeeID" value = "{{user_profile_id}}"> 
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                                <input type="text" class="form-control" id="username" placeholder="Username of Hr" value="{{username}}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                          <input type="text" class="form-control" id="first_name" placeholder="First Name of Hr" value="{{first_name}}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                          <input type="text" class="form-control" id="last_name" placeholder="Last Name of Hr" value="{{last_name}}">
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 my-2">
+                          <input type="text" class="form-control" id="email" placeholder="Email of Hr" value="{{email}}">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="row mb-3">
+                            <button class="btn btn-primary mx-auto" id = "save_button" style="width:20%">Save</button>
+                        </div>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script src="{% static 'js/employee/employee_profile.js' %}"></script>
+{% endblock content %}
