@@ -16,6 +16,9 @@ from django.urls import path
 # ]
 from manager.views2 import *
 urlpatterns = [
+    path('manager_dashboard/',manager_dashboard,name="manager_dashboard"),
+
+    
     path('manager_home/',manager_home,name="manager_home"),
     path('manager_app_update_manager_profile/',manager_app_update_manager_profile,name="manager_app_update_manager_profile"),
     path('manager_add_hr_Page/',manager_add_hr_Page,name="manager_add_hr_Page"),

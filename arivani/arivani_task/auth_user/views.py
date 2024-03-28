@@ -214,7 +214,14 @@ def loginUser(request):
                         login_user(request,user)
                         return JsonResponse({'status':200},status=200)
                 else:
-                    return JsonResponse({'status':404,'error':'Bad User credentials'},status=404)
+                    try:
+                        user_ac = User.objects.get(username=username)
+                        if user_ac.is_active == True:
+                            return JsonResponse({'status':404,'error':'wrong password'},status=404)
+                        else:
+                            return JsonResponse({'status':403,'error':'Account Suspended'},status=403)
+                    except:
+                        return JsonResponse({'status':404,'error':'username not found'},status=404)
             else:
                 return JsonResponse({'status':400,'error':'Bad request'},status=400)
     return redirect("dashboardPage")

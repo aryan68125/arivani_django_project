@@ -2,9 +2,116 @@
 {% load static %}
 {% block title %}{% endblock title %}
 {% block content %}
+<link href="{% static 'css/sudo_app/home.css' %}" rel="stylesheet"/>
+<script>
+    var get_all_users_dashboard_url = '{% url "get_all_users_dashboard" %}';
+</script>
 <div class="container"> 
     <div class=" row ms-3">
         <h3>Dashboard / Welcome Admin {{user.username}}</h3>
     </div>
+    <div class="row card-deck ms-3 my-1">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card border-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header">Managers</div>
+                <div class="card-body">
+                    <div class="table-responsive responsive_table_style">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col" style="display:none">user_id</th>
+                              <th scope="col" style="display:none">user_role_id</th>
+                              <th scope="col">Manager ID</th>
+                              <th scope="col">Username</th>
+                            </tr>
+                          </thead>
+                          <tbody id="table_data_manager">
+                              
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card border-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header">Hrs</div>
+                <div class="card-body">
+                    <div class="table-responsive responsive_table_style">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col" style="display:none">user_id</th>
+                              <th scope="col" style="display:none">user_role_id</th>
+                              <th scope="col">Hr ID</th>
+                              <th scope="col">Username</th>
+                            </tr>
+                          </thead>
+                          <tbody id="table_data_hr">
+                              
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card border-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header">Employees</div>
+                <div class="card-body">
+                    <div class="table-responsive responsive_table_style">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col" style="display:none">user_id</th>
+                              <th scope="col" style="display:none">user_role_id</th>
+                              <th scope="col">Employee ID</th>
+                              <th scope="col">Username</th>
+                            </tr>
+                          </thead>
+                          <tbody id="table_data_employee">
+                              
+                          </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--TODO Complete this show the number of employee , hr and manager-->
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card text-white bg-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header"><h4>Manager Count</h4></div>
+                <div class="card-body text-center card_style_layout">
+                  <div>
+                    <h2 id="manager_count"></h2>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card text-white bg-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header"><h4>Hr Count</h4></div>
+                <div class="card-body text-center card_style_layout">
+                  <div>
+                    <h2 id="hr_count"></h2>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card text-white bg-dark mb-3" style="max-width: 25rem; height: 17rem;">
+                <div class="card-header"><h4>Employees Count</h4></div>
+                <div class="card-body text-center card_style_layout">
+                  <div>
+                    <h2 id="employee_count"></h2>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="{% static 'js/sudo_app/sudo_app_dashboard.js' %}"></script>
 {% endblock content %}

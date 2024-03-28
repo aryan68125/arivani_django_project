@@ -1,8 +1,3 @@
-
- .scrollable-table {
-    max-height: 250px; 
-    overflow-y: auto; 
-}
 .card_style_layout{
     display:flex !important;
     flex-direction:column !important;

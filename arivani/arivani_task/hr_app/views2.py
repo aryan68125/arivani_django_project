@@ -51,6 +51,48 @@ def is_valid_password(password):
     return True
 # Custom password validation for change password
 
+# HR DASHBOARD RELATED FUNCTIONS STARTS
+def hr_dashboard(request):
+    if request.user.is_authenticated:
+        logged_in_user = request.user.id
+        user = User.objects.get(id=logged_in_user)
+        first_name = user.first_name
+        last_name = user.last_name
+        email = user.email
+        username = user.username
+        date_joined = user.date_joined.date()
+
+        name = first_name + " " + last_name
+        assigned_user_role = AssignedUserRoles.objects.get(user=user)
+        user_role = assigned_user_role.user_role
+        role_list = RoleList.objects.get(id=user_role)
+        role_name = role_list.roles
+        user_profile = Employee_profile.objects.get(user=user)
+        user_profile_id = user_profile.employeeID
+        if user.is_superuser:
+            data = {
+                'is_superuser':1,
+                'role_name':role_name,
+                'name':name,
+            }
+            return render(request,'hr_app/hr_app_home2.html',data)
+        else:
+            data = {
+                'user_role':user_role,
+                'role_name':role_name,
+                'name':name,
+                'username':username,
+                'first_name':first_name,
+                'last_name':last_name,
+                'email':email,
+                'user_profile_id':user_profile_id,
+                'date_joined':date_joined,
+            }
+            return render(request,'hr_app/hr_dashboard.html',data)
+    else:
+        return redirect("loginUserPage")
+# HR DASHBOARD RELATED FUNCTIONS ENDS
+
 #HR PROFILE PAGE RELATED FUNCTIONS STARTS
 def hr_home(request):
     if request.user.is_authenticated:

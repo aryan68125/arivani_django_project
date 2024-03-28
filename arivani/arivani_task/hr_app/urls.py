@@ -22,6 +22,9 @@ from hr_app.views2 import *
 # ]
 
 urlpatterns = [
+    path('hr_dashboard/',hr_dashboard,name="hr_dashboard"),
+
+    
     path('hr_home/',hr_home,name="hr_home"),
     path('hr_app_update_hr_profile/',hr_app_update_hr_profile,name="hr_app_update_hr_profile"),
     path('hr_add_employee_Page/',hr_add_employee_Page,name="hr_add_employee_Page_hr_app"),

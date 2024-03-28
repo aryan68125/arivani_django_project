@@ -64,7 +64,35 @@ def dashboard(request):
             return redirect("loginUserPage")
     else:
         return redirect("loginUserPage")
-
+def get_all_users_dashboard(request):
+    is_ajax = request.headers.get('X-Requested-With')=='XMLHttpRequest'
+    if is_ajax:
+        if request.user.is_authenticated:
+            logged_in_user = request.user.id
+            user = User.objects.get(id=logged_in_user)
+            user_list = []
+            if user.is_superuser:
+                users = list(User.objects.all().values())
+                for user in users:
+                    user_dic = {}
+                    if int(user['id']) != 1:
+                        print(user)
+                        user_role_var = AssignedUserRoles.objects.get(user=user['id'])
+                        role = user_role_var.user_role
+                        user_profile = Employee_profile.objects.get(user=user['id'])
+                        userID = user_profile.employeeID
+                        user_dic['user_role'] = role
+                        user_dic['userID'] = userID
+                        user_dic['username'] = user['username']
+                        user_list.append(user_dic)
+                data={
+                    'user_list':user_list
+                }
+                return JsonResponse({'status':200,'context':data},status=200)
+            else:
+                return JsonResponse({'status':401,'error':'Not authorized'},status=401)
+        else:
+            return redirect("loginUserPage")
 # DASHBOARD RELATED FUNCTIONS ENDS
 
 # CREATE USERS, VERIFY EMAIL AND ASSIGN THEM ROLES ADMIN APP STARTS

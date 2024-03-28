@@ -19,4 +19,6 @@ urlpatterns = [
     path('get_role_from_front_users/',get_role_from_front_users,name="get_role_from_front_users"),
     path('update_user_details/',update_user_details,name="update_user_details"),
     path('hard_delete_user_accounts/',hard_delete_user_accounts,name="hard_delete_user_accounts"),
+
+    path('get_all_users_dashboard/',get_all_users_dashboard,name="get_all_users_dashboard"),
 ]

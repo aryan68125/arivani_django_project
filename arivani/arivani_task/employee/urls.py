@@ -13,6 +13,8 @@ from django.urls import path
 # ]
 from employee.views2 import *
 urlpatterns = [
+    path('employee_dashboard/',employee_dashboard,name="employee_dashboard"),
+    
     path('employeePage/',employeePage,name="employeePage"),
     path('employee_app_update_employee_profile/',employee_app_update_employee_profile,name="employee_app_update_employee_profile"),
 ]
